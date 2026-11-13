@@ -47,6 +47,13 @@ nav .sw button[aria-pressed="true"]{border-color:var(--tx);box-shadow:inset 0 0 
 .song>summary::after{content:"+";color:var(--ac);font-size:24px}
 .song[open]>summary::after{content:"−"}
 .song .card{border:0;margin:0;padding:0 14px 14px}
+.tn-note{font:700 64px/1 var(--f);margin:6px 0}
+.tn-gauge{position:relative;height:40px;margin:14px 0 4px;border:1px solid var(--bd);border-radius:6px;background:var(--bg)}
+.tn-zone{position:absolute;left:45%;width:10%;top:0;bottom:0;background:var(--ac);opacity:.25}
+.tn-mid{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--mu)}
+.tn-needle{position:absolute;top:3px;bottom:3px;width:8px;margin-left:-4px;border-radius:3px;background:var(--mu);left:50%;transition:left .1s linear}
+.tn-lab{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:8px}
+@media (prefers-reduced-motion:reduce){.tn-needle{transition:none}}
 .an{max-width:170px;margin:6px auto;text-align:center}
 .an svg{width:100%;height:auto;display:block}
 .hh{transform-origin:50px 100px}
@@ -196,7 +203,7 @@ function session(w,dow){
 if(dow===0)return{off:true};
 var Wk=W[w],dd=Wk.d[dow]||null,nc=dd&&dd.nc?dd.nc:null,kn=known(w,dow),B=[],sp=PT[dow>=5?Wk.sp[1]:Wk.sp[0]],pr=(dd&&dd.pr)||Wk.hp;
 function add(n,m,d,t,g){B.push({n:n,m:m,d:d,t:t||null,g:g||``})}
-function wu(m){add(`Warm-up`,m,`Do a few spider walks to get your fingers moving.`,[`warm`,`the warm-ups`])}
+function wu(m){add(`Warm-up`,m,`Tune up first (Tuner tab), then do a few spider walks to get your fingers moving.`,[`warm`,`the warm-ups`])}
 function rev(m){add(`Review chords`,m,`Form each chord you know, one at a time: ${kn.join(`, `)}. Pick the strings to check for buzz.`,[`chords`,`the chord diagrams`])}
 function newc(m){add(`New chord: ${nc}`,m,`Use the diagram above. Form it, pick each string to check for buzz, lift off, and form it again.`)}
 function part(m){add(`Song part`,m,dd.part)}
@@ -272,7 +279,7 @@ var SONGS=[
 {n:`Skinny Love`,c:[`Am`,`G`,`C`],pats:[[`Steady down-up`,1]],t:`Start at 60 BPM.`,s:[[`One common loop`,[`Am`,`G`,`C`,`Am`]]],x:`Charts of this song differ a lot, and the original was recorded in a different tuning, so any chart is an adaptation. Pick one on Ultimate Guitar that only uses chords you know. The recording has a triplet (three-count) feel, which comes later.`},
 {n:`Big Black Car (bonus)`,c:[`Am`,`G`,`Fmaj7`,`C`],pats:[[`Soft strum`,1]],t:`Start at 60 BPM.`,s:[[`Intro and verse`,[`Am`,`G`,`Fmaj7`,`C`]]],x:`Charts use a capo on fret 3, but the shapes are the same without it. The F can be Fmaj7.`},
 {n:`Knockin’ on Heaven’s Door`,c:[`G`,`D`,`Am`,`C`],pats:[[`Strum`,2]],t:`Start at 60 BPM`,s:[[`Verse loop`,[`G`,`D`,`Am`,`Am`]],[`Chorus loop`,[`G`,`D`,`C`,`C`]]],x:`Four bars per loop. The exact order varies by version, so check the full chart.`},
-{n:`Horse with No Name`,c:[`Em`,`D`],pats:[[`Strum`,0]],t:`Start at 60 BPM`,s:[[`Loop`,[`Em`,`Em`,`D`,`D`]]],x:`Just two chords. Start with downs only, then try the steady down-up pattern.`},
+{n:`Horse with No Name`,c:[`Em`,`D`],pats:[[`Start with`,0],[`Then try`,1]],t:`Start at 60 BPM`,s:[[`Loop`,[`Em`,`Em`,`D`,`D`]]],x:`Just two chords. Start with downs only, then try the steady down-up pattern.`},
 {n:`Stand By Me`,c:[`G`,`Em`,`C`,`D`],pats:[[`Strum`,2]],t:`Start at 60 BPM, work toward 100`,s:[[`Loop (repeats through the song)`,[`G`,`G`,`Em`,`Em`,`C`,`D`,`G`,`G`]]],x:`Eight bars, repeated. Practice G to Em to C to D on its own first.`}
 ];
 function songs_(){
@@ -358,8 +365,44 @@ function swHTML(){var ms=[[`system`,`Auto`],[`light`,`Light`],[`dark`,`Dark`]];r
 function menu(o){var n=$(`#nav`),b=$(`#mbtn`);if(o===undefined)o=!n.classList.contains(`open`);n.classList.toggle(`open`,o);b.classList.toggle(`open`,o);b.setAttribute(`aria-expanded`,o?`true`:`false`)}
 try{mq.addEventListener(`change`,function(){applyAcc();render()})}catch(e){}
 applyAcc();
+var TS=[{n:`E`,o:2,f:82.41,s:`6th`},{n:`A`,o:2,f:110,s:`5th`},{n:`D`,o:3,f:146.83,s:`4th`},{n:`G`,o:3,f:196,s:`3rd`},{n:`B`,o:3,f:246.94,s:`2nd`},{n:`e`,o:4,f:329.63,s:`1st`}];
+var tuner={on:false,tgt:-1,ctx:null,an:null,st:null,src:null,iv:null,buf:null,hist:[],last:0};
+function yin(x,sr){var W=Math.floor(x.length/2),tMax=Math.min(W-1,Math.floor(sr/60)),tMin=Math.floor(sr/420),d=new Float32Array(tMax+2),cm=new Float32Array(tMax+2),t,j,s,df,run=0,tau=-1,mi,a,b,c,den,sh;
+for(t=1;t<=tMax;t++){s=0;for(j=0;j<W;j++){df=x[j]-x[j+t];s+=df*df}d[t]=s}
+cm[0]=1;for(t=1;t<=tMax;t++){run+=d[t];cm[t]=run>0?d[t]*t/run:1}
+for(t=tMin;t<tMax;t++){if(cm[t]<.15){while(t+1<tMax&&cm[t+1]<cm[t])t++;tau=t;break}}
+if(tau<0){mi=tMin;for(t=tMin;t<=tMax;t++)if(cm[t]<cm[mi])mi=t;if(cm[mi]<.3)tau=mi;else return -1}
+if(tau<=1||tau>=tMax)return sr/tau;
+a=cm[tau-1];b=cm[tau];c=cm[tau+1];den=a+c-2*b;sh=den?(a-c)/(2*den):0;return sr/(tau+sh)}
+function tnShow(f){var e=$(`#tn-note`),k,i,c,best=1e9,s,ok,pos;if(!e)return;
+if(f===null){e.textContent=`–`;$(`#tn-msg`).textContent=tuner.on?`Pluck a string`:`Press Start`;$(`#tn-hz`).textContent=``;$(`#tn-nd`).style.left=`50%`;$(`#tn-nd`).style.background=`var(--mu)`;return}
+k=tuner.tgt;if(k<0){for(i=0;i<6;i++){c=1200*Math.log(f/TS[i].f)/Math.LN2;if(Math.abs(c)<Math.abs(best)){best=c;k=i}}}else best=1200*Math.log(f/TS[k].f)/Math.LN2;
+s=TS[k];ok=Math.abs(best)<=5;pos=Math.max(-50,Math.min(50,best));
+e.textContent=s.n.toUpperCase()+s.o;
+$(`#tn-msg`).textContent=ok?`In tune (${s.s} string)`:Math.abs(best)>200?`Far off. Check you are plucking the ${s.s} string.`:best<0?`Too flat. Tighten the string to tune up.`:`Too sharp. Loosen the string to tune down.`;
+$(`#tn-hz`).textContent=f.toFixed(1)+` Hz, `+(best>0?`+`:``)+Math.round(best)+` cents`;
+$(`#tn-nd`).style.left=(50+pos)+`%`;$(`#tn-nd`).style.background=ok?`var(--ac)`:`var(--tx)`}
+function tunerTick(){var T=tuner,r=0,i,f,h,m;if(!T.on||!T.an)return;T.an.getFloatTimeDomainData(T.buf);for(i=0;i<T.buf.length;i++)r+=T.buf[i]*T.buf[i];r=Math.sqrt(r/T.buf.length);
+f=r>.008?yin(T.buf,T.ctx.sampleRate):-1;
+if(f>0&&f<500){T.hist.push(f);if(T.hist.length>5)T.hist.shift();T.last=Date.now()}
+else if(Date.now()-T.last>700){T.hist=[];tnShow(null);return}
+if(!T.hist.length)return;h=T.hist.slice().sort(function(a,b){return a-b});m=h[Math.floor(h.length/2)];tnShow(m)}
+function tnUi(){var b=$(`#tn-btn`);if(b)b.textContent=tuner.on?`Stop tuner`:`Start tuner`;if(!tuner.on)tnShow(null)}
+function tnErr(e){var m=$(`#tn-msg`);if(!m)return;m.textContent=e&&e.name===`NotAllowedError`?`Microphone permission was denied. Allow it in your browser or iPhone settings and try again.`:`The microphone isn’t available here. If you are using the version inside Claude, open the GitHub Pages version instead.`}
+async function tunerStart(){var T=tuner,st,AC;if(T.on)return;try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error(`nomic`);
+st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+AC=window.AudioContext||window.webkitAudioContext;T.ctx=T.ctx||new AC();if(T.ctx.resume)await T.ctx.resume();
+T.src=T.ctx.createMediaStreamSource(st);T.an=T.ctx.createAnalyser();T.an.fftSize=4096;T.src.connect(T.an);T.buf=new Float32Array(T.an.fftSize);T.st=st;T.on=true;T.hist=[];T.last=0;T.iv=setInterval(tunerTick,80);tnUi()}catch(e){tnErr(e)}}
+function tunerStop(){var T=tuner;if(T.iv){clearInterval(T.iv);T.iv=null}if(T.st){T.st.getTracks().forEach(function(t){t.stop()});T.st=null}try{if(T.src)T.src.disconnect()}catch(e){}T.src=null;T.an=null;T.on=false;tnUi()}
+function tnTone(i){var T=tuner,AC,o,g,t;try{AC=window.AudioContext||window.webkitAudioContext;T.ctx=T.ctx||new AC();if(T.ctx.resume)T.ctx.resume();o=T.ctx.createOscillator();g=T.ctx.createGain();t=T.ctx.currentTime;o.type=`triangle`;o.frequency.value=TS[i].f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.3,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+2.5);o.connect(g);g.connect(T.ctx.destination);o.start(t);o.stop(t+2.6)}catch(e){}}
+function tuner_(){
+var h=`<h1>Tuner</h1><p class='mu'>Tap Start, allow the microphone, and pluck one open string at a time. Tune until the needle sits in the middle. Standard tuning is E A D G B e.</p>`;
+h+=`<div class='card' style='text-align:center'><div class='tn-note' id='tn-note'>–</div><div id='tn-msg' class='mu'>Press Start</div><div class='tn-gauge'><div class='tn-zone'></div><div class='tn-mid'></div><div class='tn-needle' id='tn-nd'></div></div><div class='tn-lab'><span>♭ flat</span><span>sharp ♯</span></div><div class='mu' id='tn-hz'>&nbsp;</div><p><button class='btn go' id='tn-btn' data-tn='1'>${tuner.on?`Stop tuner`:`Start tuner`}</button></p></div>`;
+h+=`<h2>Pick a string</h2><p class='mu'>Auto finds the closest string for you. Or tap a string to tune to it, which also plays its note if the tuner is stopped.</p><div class='seg' id='tn-seg'><button data-ts='-1' aria-pressed='${tuner.tgt<0}'>Auto</button>`+TS.map(function(x,i){return `<button data-ts='${i}' aria-pressed='${tuner.tgt===i}'>${x.n.toUpperCase()}${x.o}</button>`}).join(``)+`</div>`;
+h+=`<h2>Tips</h2><div class='card'><p>Tune from the thickest string (low E) to the thinnest. Pluck one string at a time and let it ring.</p><p>Always finish by tightening up to the note. If you went too sharp, loosen below it first and come back up.</p><p>Use a quiet room, and keep the phone near the sound hole. If the note jumps around, pluck more gently.</p><p>New strings drift flat for a while, so check again after a few minutes. If you hear nothing from the tone buttons, check that your iPhone’s silent switch is off.</p></div>`;
+return h}
 var VIEWS={today:["Today",today_],warm:["Warm-up",warm_],chords:["Chords",chords_],strum:["Strum",strum_],scale:["Scale",scale_],songs:["Songs",songs_],nums:["Numbers",nash_],plan:["Plan",plan_],learn:["Learn",learn_]};
-function render(){Object.keys(ANIM).forEach(anStop);
+function render(){Object.keys(ANIM).forEach(anStop);if(tuner.on)tunerStop();
 $("#nav").innerHTML=Object.keys(VIEWS).map(function(k){return '<button aria-current="'+(k===tab?"page":"false")+'" data-t="'+k+'">'+VIEWS[k][0]+'</button>'}).join("")+swHTML();
 $("#app").innerHTML=VIEWS[tab][1]();
 document.querySelectorAll("details[data-an][open]").forEach(anOpen);
@@ -376,12 +419,15 @@ var kk=e.target.closest("[data-k]");if(kk){nk=kk.getAttribute("data-k");render()
 if(!e.target.closest("#nav"))menu(false);
 var t=e.target.closest("[data-t]");if(t){if(tmr){clearInterval(tmr);tmr=null}tab=t.getAttribute("data-t");menu(false);render();window.scrollTo(0,0);return}
 var hd=e.target.closest("[data-h]");if(hd){lefty=hd.getAttribute("data-h")==="l";ss("gp_left",lefty?"1":"0");render();return}
+var tb=e.target.closest("[data-tn]");if(tb){if(tuner.on)tunerStop();else tunerStart();return}
+var ts=e.target.closest("[data-ts]");if(ts){var ti=parseInt(ts.getAttribute("data-ts"),10);tuner.tgt=ti;document.querySelectorAll("#tn-seg button").forEach(function(b){b.setAttribute("aria-pressed",String(b===ts))});if(ti>=0&&!tuner.on)tnTone(ti);return}
 var ap=e.target.closest("[data-ap]");if(ap){var aid=ap.getAttribute("data-ap"),ast=ANIM[aid];if(ast&&ast.t){anStop(aid);ast.paused=true}else{if(ast)ast.paused=false;anStart(aid)}return}
 var dd=e.target.closest("[data-d]");if(dd){dayI=parseInt(dd.getAttribute("data-d"),10);render();return}
 var w=e.target.closest("[data-w]");if(w){week=parseInt(w.getAttribute("data-w"),10);ss("gp_week",week);render()}});
 document.addEventListener("change",function(e){var s=e.target.getAttribute("data-s");if(s===null)return;s=parseInt(s,10);
 var i=chk.indexOf(s);if(e.target.checked&&i<0)chk.push(s);if(!e.target.checked&&i>-1)chk.splice(i,1);saveChk()});
 document.addEventListener("toggle",function(e){var d=e.target,id;if(!d||d.tagName!=="DETAILS")return;id=d.getAttribute("data-an");if(!id)return;if(d.open)anOpen(d);else anStop(id)},true);
+document.addEventListener("visibilitychange",function(){if(document.hidden&&tuner.on)tunerStop()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape")menu(false)});
 render();
 var cref=null,cst=null;
