@@ -397,9 +397,9 @@ $(`#tn-msg`).textContent=ok?`In tune (${s.s} string)`:Math.abs(best)>200?`Far of
 $(`#tn-hz`).textContent=f.toFixed(1)+` Hz, `+(best>0?`+`:``)+Math.round(best)+` cents`;
 $(`#tn-nd`).style.left=(50+pos)+`%`;$(`#tn-nd`).style.background=ok?`var(--ac)`:`var(--tx)`}
 function tunerTick(){var T=tuner,r=0,i,f,h,m;if(!T.on||!T.an)return;T.an.getFloatTimeDomainData(T.buf);for(i=0;i<T.buf.length;i++)r+=T.buf[i]*T.buf[i];r=Math.sqrt(r/T.buf.length);
-f=r>.008?yin(T.buf,T.ctx.sampleRate):-1;
-if(f>0&&f<500){T.hist.push(f);if(T.hist.length>5)T.hist.shift();T.last=Date.now()}
-else if(Date.now()-T.last>700){T.hist=[];tnShow(null);return}
+f=r>.0015?yin(T.buf,T.ctx.sampleRate):-1;T.rms=r;
+if(f>70&&f<500){T.hist.push(f);if(T.hist.length>5)T.hist.shift();T.last=Date.now()}
+else if(Date.now()-T.last>700){T.hist=[];tnShow(null);var mg=$(`#tn-msg`);if(mg&&T.on)mg.textContent=r<.0015?`I can’t hear much. Hold the phone close to the guitar and pluck firmly.`:`Hearing sound but no clear pitch. Mute the other strings and let one ring.`;return}
 if(!T.hist.length)return;h=T.hist.slice().sort(function(a,b){return a-b});m=h[Math.floor(h.length/2)];tnShow(m)}
 function tnUi(){var b=$(`#tn-btn`);if(b)b.textContent=tuner.on?`Stop tuner`:`Start tuner`;if(!tuner.on)tnShow(null)}
 function tnErr(e){var m=$(`#tn-msg`);if(!m)return;m.textContent=e&&e.name===`NotAllowedError`?`Microphone permission was denied. Allow it in your browser or iPhone settings and try again.`:`The microphone isn’t available here. If you are using the version inside Claude, open the GitHub Pages version instead.`}
