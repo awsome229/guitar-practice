@@ -423,7 +423,8 @@ var pa={tr:parseInt(sg(`gp_tr`)||`0`,10)||0,simp:sg(`gp_simp`)===`1`,sp:20,run:f
 function pnote(x,n){var i=PN.indexOf(x);if(i<0)i=PF[x];return i===undefined?x:PN[((i+n)%12+12)%12]}
 function pchord(c,n,simp){var m=c.match(CRE);if(!m)return c;var q=m[2];if(simp){q=/^m(?!aj)/.test(q)?`m`:``;return pnote(m[1],n)+q}return pnote(m[1],n)+q+(m[3]?`/`+pnote(m[3],n):``)}
 function pline(l){var w=l.replace(/[|\-]/g,` `).trim().split(/\s+/);return w[0]!==``&&w.every(function(x){return CRE.test(x)})}
-function pesc(s){return s.replace(/[&<>]/g,function(c){return{"&":`&amp;`,"<":`&lt;`,">":`&gt;`}[c]})}
+function pesc(s){return s.replace(/[&<>'"]/g,function(c){return{"&":`&amp;`,"<":`&lt;`,">":`&gt;`,"'":`&#39;`,'"':`&quot;`}[c]})}
+function ytId(u){var m=String(u).match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/);return m?m[1]:null}
 function psheet(t){return t.split(`\n`).map(function(l){if(!pline(l))return pesc(l);return l.replace(/[^\s|\-]+/g,function(c){return `<b>`+pesc(pchord(c,pa.tr,pa.simp))+`</b>`})}).join(`\n`)}
 function pchords(t){var s=[];t.split(`\n`).forEach(function(l){if(pline(l))l.replace(/[^\s|\-]+/g,function(c){c=pchord(c,pa.tr,true);if(s.indexOf(c)<0)s.push(c)})});return s}
 function pcapo(t){var cs=pchords(t),best=null,c,sh,n;if(!cs.length)return ``;
@@ -435,7 +436,7 @@ function pscroll(on){pa.run=on;cancelAnimationFrame(pa.raf);var b=$(`#ps-go`);if
 function pupd(){var t=$(`#ps-in`).value;$(`#ps-out`).innerHTML=psheet(t)||`<span class='mu'>Your song shows up here.</span>`;$(`#ps-tr`).textContent=pa.tr===0?`Original key`:(pa.tr>0?`+`:``)+pa.tr+` semitone`+(Math.abs(pa.tr)===1?``:`s`);$(`#ps-capo`).innerHTML=pcapo(t);$(`#ps-simp`).setAttribute(`aria-pressed`,String(pa.simp))}
 function play_(){
 var h=`<h1>Play along</h1><p class='mu'>Slow a song down to learn it, then play it from your own song sheet.</p>`;
-h+=`<h2>Practice player</h2><div class='card'><p class='mu'>Pick a song file saved on your device (MP3, M4A or WAV). Songs from Apple Music or Spotify can't be opened here. The file stays on your device.</p><p><input type='file' id='pa-f' accept='audio/*' aria-label='Choose a song file' style='width:100%'></p><audio id='pa-a' controls style='width:100%'></audio>
+h+=`<h2>Practice player</h2><div class='card'><p class='mu'>Paste a YouTube link, or pick a song file saved on your device (MP3, M4A or WAV). Songs from Apple Music or Spotify can't be opened here.</p><div class='row'><input id='yt-u' type='url' inputmode='url' autocomplete='off' aria-label='YouTube link' placeholder='Paste a YouTube link' value='${pesc(sg(`gp_yt`)||``)}' style='flex:1;min-width:0;font:15px var(--f);padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)'><button class='btn go' id='yt-go'>Load</button></div><div id='yt-box' hidden style='margin-top:10px;aspect-ratio:16/9;border-radius:8px;overflow:hidden'><div id='yt-p'></div></div><p style='margin-top:14px'><input type='file' id='pa-f' accept='audio/*' aria-label='Choose a song file' style='width:100%'></p><audio id='pa-a' controls style='width:100%'></audio>
 <p><b>Speed</b></p><div class='seg' id='pa-sp'>`+[.5,.6,.75,.9,1].map(function(r){return `<button data-pr='${r}' aria-pressed='${r===1}'>${r*100}%</button>`}).join(``)+`</div>
 <p><b>Loop a hard part</b></p><div class='seg'><button id='pa-la'>Set loop start</button><button id='pa-lb'>Set loop end</button><button id='pa-lc'>Clear loop</button></div><p class='mu' id='pa-lm'>Play the song, then press start and end at the right moments.</p></div>`;
 h+=`<h2>Song sheet</h2><div class='card'><p class='mu'>Paste a song's chords and lyrics, for example from the Ultimate Guitar link on the Songs tab. Lines with only chord names get transposed. It is saved on this device only.</p><textarea id='ps-in' rows='8' spellcheck='false' style='width:100%;font:14px ui-monospace,Menlo,monospace;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)' placeholder='G       D        Am\nMama, take this badge off of me'>${pesc(sg(`gp_sheet`)||``)}</textarea>
@@ -443,13 +444,24 @@ h+=`<h2>Song sheet</h2><div class='card'><p class='mu'>Paste a song's chords and
 <p><b>Auto-scroll</b></p><div class='row'><button class='btn go' id='ps-go' aria-pressed='false'>Start scrolling</button><input type='range' id='ps-sp' min='5' max='60' value='${pa.sp}' aria-label='Scroll speed'></div></div>
 <pre id='ps-out' class='card' style='white-space:pre-wrap;font:16px/1.6 ui-monospace,Menlo,monospace;overflow-wrap:anywhere'></pre>`;
 return h}
-function paInit(){var a=$(`#pa-a`),lm=$(`#pa-lm`),fmt=function(s){return Math.floor(s/60)+`:`+String(Math.floor(s%60)).padStart(2,`0`)};
-$(`#pa-f`).onchange=function(){var f=this.files[0];if(!f)return;if(a.src)URL.revokeObjectURL(a.src);a.src=URL.createObjectURL(f);a.preservesPitch=true;pa.la=pa.lb=null;lm.textContent=`Loaded ${f.name}.`};
-$(`#pa-sp`).onclick=function(e){var b=e.target.closest(`[data-pr]`);if(!b)return;a.playbackRate=parseFloat(b.getAttribute(`data-pr`));a.preservesPitch=true;this.querySelectorAll(`button`).forEach(function(x){x.setAttribute(`aria-pressed`,String(x===b))})};
-$(`#pa-la`).onclick=function(){pa.la=a.currentTime;if(pa.lb!==null&&pa.lb<=pa.la)pa.lb=null;lm.textContent=`Loop starts at ${fmt(pa.la)}.`+(pa.lb!==null?` Ends at ${fmt(pa.lb)}.`:` Now set the end.`)};
-$(`#pa-lb`).onclick=function(){if(pa.la===null||a.currentTime<=pa.la){lm.textContent=`Set the start first, then press end later in the song.`;return}pa.lb=a.currentTime;a.currentTime=pa.la;lm.textContent=`Looping ${fmt(pa.la)} to ${fmt(pa.lb)}.`};
+function paInit(){var a=$(`#pa-a`),lm=$(`#pa-lm`),fmt=function(s){return Math.floor(s/60)+`:`+String(Math.floor(s%60)).padStart(2,`0`)},yt=null,src=`file`,rate=1;
+pa.la=pa.lb=null;
+function cur(){return src===`yt`&&yt&&yt.getCurrentTime?yt.getCurrentTime():a.currentTime}
+function seek(t){if(src===`yt`&&yt&&yt.seekTo)yt.seekTo(t,true);else a.currentTime=t}
+function ytRate(){if(!yt||!yt.setPlaybackRate)return;yt.setPlaybackRate(rate);setTimeout(function(){try{var g=yt.getPlaybackRate();if(src===`yt`&&g!==rate)lm.textContent=`This video only plays at certain speeds, so it's playing at ${Math.round(g*100)}%.`}catch(e){}},400)}
+function ytApi(cb){if(window.YT&&YT.Player)return cb();var p=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=function(){if(p)p();cb()};if(!$(`#yt-api`)){var s=document.createElement(`script`);s.id=`yt-api`;s.src=`https://www.youtube.com/iframe_api`;s.onerror=function(){s.remove();lm.textContent=`Couldn't reach YouTube. YouTube links need an internet connection.`};document.head.appendChild(s)}}
+var ytErr={2:`That link doesn't point to a video.`,5:`This video can't play here.`,100:`That video was removed or is private.`,101:`The video's owner doesn't allow it to play in other apps. Try a different upload of the song.`,150:`The video's owner doesn't allow it to play in other apps. Try a different upload of the song.`};
+$(`#yt-go`).onclick=function(){var id=ytId($(`#yt-u`).value);if(!id){lm.textContent=`That doesn't look like a YouTube link. Copy it from the Share button in YouTube.`;return}
+ss(`gp_yt`,$(`#yt-u`).value.trim());a.pause();src=`yt`;pa.la=pa.lb=null;$(`#yt-box`).hidden=false;lm.textContent=`Loading the video…`;
+ytApi(function(){if(yt&&yt.cueVideoById){yt.cueVideoById(id);lm.textContent=`Loaded. Press play on the video.`;return}
+yt=new YT.Player(`yt-p`,{videoId:id,width:`100%`,height:`100%`,playerVars:{playsinline:1,rel:0},events:{onReady:function(){lm.textContent=`Loaded. Press play on the video.`;ytRate()},onError:function(e){lm.textContent=ytErr[e.data]||`This video can't play here.`}}})})};
+clearInterval(pa.yti);pa.yti=setInterval(function(){try{if(src===`yt`&&pa.la!==null&&pa.lb!==null&&cur()>=pa.lb)seek(pa.la)}catch(e){}},200);
+$(`#pa-f`).onchange=function(){var f=this.files[0];if(!f)return;src=`file`;if(yt&&yt.pauseVideo)yt.pauseVideo();$(`#yt-box`).hidden=true;a.playbackRate=rate;if(a.src)URL.revokeObjectURL(a.src);a.src=URL.createObjectURL(f);a.preservesPitch=true;pa.la=pa.lb=null;lm.textContent=`Loaded ${f.name}.`};
+$(`#pa-sp`).onclick=function(e){var b=e.target.closest(`[data-pr]`);if(!b)return;rate=parseFloat(b.getAttribute(`data-pr`));a.playbackRate=rate;a.preservesPitch=true;lm.textContent=``;ytRate();this.querySelectorAll(`button`).forEach(function(x){x.setAttribute(`aria-pressed`,String(x===b))})};
+$(`#pa-la`).onclick=function(){pa.la=cur();if(pa.lb!==null&&pa.lb<=pa.la)pa.lb=null;lm.textContent=`Loop starts at ${fmt(pa.la)}.`+(pa.lb!==null?` Ends at ${fmt(pa.lb)}.`:` Now set the end.`)};
+$(`#pa-lb`).onclick=function(){if(pa.la===null||cur()<=pa.la){lm.textContent=`Set the start first, then press end later in the song.`;return}pa.lb=cur();seek(pa.la);lm.textContent=`Looping ${fmt(pa.la)} to ${fmt(pa.lb)}.`};
 $(`#pa-lc`).onclick=function(){pa.la=pa.lb=null;lm.textContent=`Loop cleared.`};
-a.ontimeupdate=function(){if(pa.la!==null&&pa.lb!==null&&a.currentTime>=pa.lb)a.currentTime=pa.la};
+a.ontimeupdate=function(){if(src===`file`&&pa.la!==null&&pa.lb!==null&&a.currentTime>=pa.lb)a.currentTime=pa.la};
 $(`#ps-in`).oninput=function(){ss(`gp_sheet`,this.value);pupd()};
 $(`#ps-up`).onclick=function(){pa.tr++;if(pa.tr>11)pa.tr-=12;ss(`gp_tr`,pa.tr);pupd()};
 $(`#ps-dn`).onclick=function(){pa.tr--;if(pa.tr<-11)pa.tr+=12;ss(`gp_tr`,pa.tr);pupd()};
@@ -458,7 +470,7 @@ $(`#ps-sp`).oninput=function(){pa.sp=+this.value};
 $(`#ps-go`).onclick=function(){pscroll(!pa.run)};
 pupd()}
 var VIEWS={today:["Today",today_],warm:["Warm-up",warm_],tuner:["Tuner",tuner_],chords:["Chords",chords_],strum:["Strum",strum_],scale:["Scale",scale_],songs:["Songs",songs_],play:["Play along",play_],nums:["Numbers",nash_],plan:["Plan",plan_],learn:["Learn",learn_]};
-function render(){Object.keys(ANIM).forEach(anStop);pscroll(false);if(tuner.on)tunerStop();
+function render(){Object.keys(ANIM).forEach(anStop);pscroll(false);clearInterval(pa.yti);if(tuner.on)tunerStop();
 $("#nav").innerHTML=Object.keys(VIEWS).map(function(k){return '<button aria-current="'+(k===tab?"page":"false")+'" data-t="'+k+'">'+VIEWS[k][0]+'</button>'}).join("")+swHTML();
 $("#app").innerHTML=VIEWS[tab][1]();
 document.querySelectorAll("details[data-an][open]").forEach(anOpen);
