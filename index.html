@@ -24,7 +24,7 @@ h1{font:700 28px/1.15 var(--f);margin:8px 0 4px;letter-spacing:-.01em}
 h2{font:600 20px/1.2 var(--f);margin:22px 0 8px}
 p{margin:6px 0}
 .mu{color:var(--mu);font-size:14px}
-#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);background:var(--bg);border-top:1px solid var(--bd)}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);background:var(--bg);border-top:1px solid var(--bd)}
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){#tabs{background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}}
 #tabs button{background:none;border:0;color:var(--mu);font:600 11px var(--f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;cursor:pointer}
 #tabs button[aria-current=page]{color:var(--ac)}
@@ -155,6 +155,12 @@ summary{cursor:pointer;font-weight:600}
 .md button[aria-pressed=true]{background:var(--pri);color:var(--onp);border-color:var(--pri)}
 .sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.sw button{height:34px;border-radius:8px;border:2px solid transparent;cursor:pointer}
 .sw button[aria-pressed=true]{border-color:var(--tx);box-shadow:inset 0 0 0 2px var(--card)}
+
+.emo{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:10px}
+.emo button{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:12px;padding:2px 0;font-size:17px;min-height:44px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.emo button[aria-pressed=true]{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 18%,transparent)}
+.emo b{font:700 12px var(--f)}
+.emo b{font-size:11px}.emo .del{grid-column:1/-1;justify-self:end;padding:0 12px;min-height:36px;font:600 13px var(--f);color:var(--mu)}
 @media (prefers-reduced-motion:reduce){#app.enter>*,.stp,.ok,.recb.on i{animation:none}.tr-fg{transition:none}}
 </style>
 </head>
@@ -210,7 +216,7 @@ else{var y=top+(f-.5)*fh;s+='<circle cx="'+x+'" cy="'+y+'" r="6.5" fill="var(--a
 s+='<text x="50" y="122" text-anchor="middle" font-size="8" fill="var(--mu)">'+(lefty?"e B G D A E":"E A D G B e")+'</text></svg>';
 return s}
 function chordCard(n){return '<div class="ch"><b>'+n+'</b>'+dia(n)+'</div>'}
-function streak(){var set={},n=0,d=new Date();days.forEach(function(x){set[x]=1});
+function streak(ds){var set={},n=0,d=new Date();(ds||days).forEach(function(x){set[x]=1});
 function key(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 if(!set[key(d)])d.setDate(d.getDate()-1);
 while(set[key(d)]||d.getDay()===0){if(set[key(d)])n++;d.setDate(d.getDate()-1)}return n}
@@ -588,7 +594,7 @@ function open(id){var k=SKI[id];return k.q.every(function(q){return st(q)>=(k.k=
 function level(){for(var l=1;l<3;l++)if(SKL.some(function(r){return r[2]===l&&st(r[0])<3}))return l;return 3}
 function goalSong(){var g=prof&&prof.goal;return SONGS.filter(function(s){return s.n===g})[0]||null}
 function songSkills(s){var o=[];function add(i){if(i&&o.indexOf(i)<0)o.push(i)}s.c.forEach(function(c){add(CHS[c])});s.s.forEach(function(r){r[1].forEach(function(c,i){var nx=r[1][(i+1)%r[1].length];if(nx!==c)add(PAIR[[c,nx].sort().join(`|`)])})});add(PTS[s.pats[0][1]]);return o}
-function songProg(s){var k=songSkills(s);return k.length?Math.round(100*k.filter(function(i){return st(i)>=3}).length/k.length):0}
+function songProg(s,sk){var k=songSkills(s);return k.length?Math.round(100*k.filter(function(i){return (sk?sk[i]&&sk[i].st||0:st(i))>=3}).length/k.length):0}
 function ready(s){return s.c.filter(function(c){return CHS[c]&&st(CHS[c])>=1}).length/s.c.length}
 function chipName(k){return k.k===`ch`?k.x:k.k===`cg`?k.x.join(` ↔ `):k.n}
 function skSub(k){return k.k===`ch`?`Form it and check for buzz`:k.k===`cg`?`One-minute changes`:k.k===`st`?`${k.x[1]} BPM with the metronome`:k.k===`tm`||k.k===`sc`?`${k.x} BPM with the metronome`:AREAS[k.a]}
@@ -663,7 +669,7 @@ function ocStart(){ocStop();oc.left=60;var b=$(`#oc-go`);b.textContent=`60s`;oc.
 function ocSave(){var s=sess.steps[sess.i],n=parseInt($(`#oc-n`).value,10),k;if(!(n>=0&&n<=200)){$(`#oc-m`).textContent=`Enter a number.`;return}k=ens(s.id);if(n>(k.b||0))k.b=n;saveSK();
 var r=n>=CGT?2:n>=Math.round(CGT*.6)?1:0;document.querySelectorAll(`[data-rate]`).forEach(function(x){x.classList.toggle(`sug`,+x.getAttribute(`data-rate`)===r)});
 $(`#oc-m`).textContent=`${n} clean changes. Suggested rating: ${[`Rough`,`Getting there`,`Smooth`][r]}.`}
-function nextStep(r){var s=sess.steps[sess.i];if(r!==undefined&&s.k===`sk`){var c=grade(s.id,r);sess.res.push({n:s.n,a:c[0],b:c[1],id:s.id})}
+function nextStep(r){var s=sess.steps[sess.i];if(r!==undefined&&s.k===`sk`){var c=grade(s.id,r);sess.res.push({n:s.n,a:c[0],b:c[1],id:s.id});if(c[1]>=3&&c[1]>c[0])milestone(s.n,c[1])}
 clearInterval(sess.iv);ocStop();metStop();sess.i++;
 if(sess.i>=sess.steps.length){logDay();tab=`done`;render();window.scrollTo(0,0);return}
 var ns=sess.steps[sess.i];sess.left=ns.m*60;sess.run=false;stepBpm(ns);render();window.scrollTo(0,0)}
@@ -673,8 +679,8 @@ function done_(){var r=sess?sess.res:[],h=`<div class='done'><div class='ok'><sv
 if(r.length)h+=`<div class='card list'>${r.map(function(x){var k=SK[x.id]||{};return `<div class='rs'><b>${x.n}</b><span class='mu'>${x.a!==x.b&&x.a?`${STG[x.a]} → <b class='up'>${STG[x.b]}</b>`:x.b<3&&k.h?`${STG[x.b]} · 1 of 2 smooth days`:STG[x.b]}</span></div>`}).join(``)}</div><p class='mu'>Smooth on two different days moves a skill to Solid. Solid skills come back for review after 1, 3, 7, 14 and 30 days.</p>`;
 return h+`<button class='big go' data-t='home'>Back home</button>`}
 var su=null,openSk=null;
-function setup_(){if(!su)su=prof?JSON.parse(JSON.stringify(prof)):{name:``,lv:0,sty:[],goal:SONGS[0].n};
-var h=`<h1>${prof?`Your setup`:`Welcome 👋`}</h1><p class='mu'>A few questions so the app can build your practice. You can change these any time in Settings.</p>`;
+function setup_(){if(!su)su=prof?JSON.parse(JSON.stringify(prof)):{name:G.nm,lv:0,sty:[],goal:SONGS[0].n};
+var h=`<h1>${prof?`Your setup`:`Welcome 👋`}</h1><p class='mu'>A few questions so the app can build your practice. You can change these any time in Settings.</p>`+(prof||me?``:`<p class='mu'>Already have an account? <button class='back' data-t='group' style='min-height:0;padding:0'>Sign in</button></p>`);
 h+=`<p class='lab'><label for='su-n'>Your name</label></p><input id='su-n' class='inp' value='${pesc(su.name)}' maxlength='30' autocomplete='given-name'>`;
 h+=`<p class='lab'>How much have you played?</p><div class='seg col' role='group' aria-label='Experience'>${LVQ.map(function(q,i){return `<button data-lv='${i}' aria-pressed='${su.lv===i}'><b>${q[0]}</b><span class='mu'>${q[1]}</span></button>`}).join(``)}</div>`;
 h+=`<p class='lab'>Styles you like</p><div class='seg' role='group' aria-label='Styles'>${STY.map(function(s){return `<button data-sty='${s[0]}' aria-pressed='${su.sty.indexOf(s[0])>-1}'>${s[1]}</button>`}).join(``)}</div>`;
@@ -690,14 +696,14 @@ return h}
 var tool=`tuner`;
 function met_(){return `<h1>Metronome</h1><p class='mu'>Start slow. Add 5 BPM after four clean bars in a row.</p>`+met()}
 var rec={mr:null,list:[],t0:0,iv:null};
-function rec_(){var h=`<h1>Record</h1><p class='mu'>Record a riff or a run-through and listen back. Recordings stay until you close the app, so save the ones you want to keep. Sharing with your group comes with accounts.</p>`;
+function rec_(){var h=`<h1>Record</h1><p class='mu'>Record a riff or a run-through and listen back. Takes stop at one minute. They stay until you close the app, so save or share the ones you want to keep.</p>`;
 h+=`<div class='card' style='text-align:center'><button class='recb${rec.mr?` on`:``}' id='rc-b' aria-label='${rec.mr?`Stop recording`:`Start recording`}'><i></i></button><p id='rc-m' class='mu' role='status'>${rec.mr?`Recording…`:`Tap to record`}</p></div>`;
-return h+rec.list.slice().reverse().map(function(r){return `<div class='card'><b>${r.n}</b><audio controls src='${r.u}' style='width:100%;margin-top:8px'></audio><p><a href='${r.u}' download='${r.f}'>Save to device</a></p></div>`}).join(``)}
+return h+rec.list.map(function(r,i){return `<div class='card'><b>${r.n}</b><audio controls src='${r.u}' style='width:100%;margin-top:8px'></audio><p><a href='${r.u}' download='${r.f}'>Save to device</a></p>${r.sh?`<p class='mu'>Shared to ${pesc(G.g?G.g.name:`your group`)} ✓</p>`:me&&G.g?`<input id='rc-c${i}' class='inp' maxlength='200' aria-label='Caption' placeholder='Say something about it (optional)'><button class='btn go' data-sh='${i}'>Share to ${pesc(G.g.name)}</button>`:`<p class='mu'>Join a group on the Group tab to share takes.</p>`}</div>`}).reverse().join(``)}
 async function recToggle(){if(rec.mr){rec.mr.stop();return}
-try{if(!window.MediaRecorder||!navigator.mediaDevices)throw new Error(`none`);var s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}),mr=new MediaRecorder(s),ch=[];
+try{if(!window.MediaRecorder||!navigator.mediaDevices)throw new Error(`none`);var s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}),mr,ch=[];try{mr=new MediaRecorder(s,{audioBitsPerSecond:96000})}catch(er){mr=new MediaRecorder(s)}
 mr.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
-mr.onstop=function(){s.getTracks().forEach(function(t){t.stop()});clearInterval(rec.iv);var b=new Blob(ch,{type:mr.mimeType||`audio/webm`}),n=rec.list.length+1;rec.list.push({n:`Take ${n} · ${mmss(Math.round((Date.now()-rec.t0)/1000))}`,u:URL.createObjectURL(b),f:`riff-${n}.${/mp4|aac/.test(b.type)?`m4a`:`webm`}`});rec.mr=null;if(tab===`tools`&&tool===`rec`)render()};
-mr.start();rec.mr=mr;rec.t0=Date.now();render();rec.iv=setInterval(function(){var m=$(`#rc-m`);if(m)m.textContent=`Recording… ${mmss(Math.round((Date.now()-rec.t0)/1000))}`},500)}
+mr.onstop=function(){s.getTracks().forEach(function(t){t.stop()});clearInterval(rec.iv);var b=new Blob(ch,{type:mr.mimeType||`audio/webm`}),n=rec.list.length+1;rec.list.push({b:b,n:`Take ${n} · ${mmss(Math.round((Date.now()-rec.t0)/1000))}`,u:URL.createObjectURL(b),f:`riff-${n}.${/mp4|aac/.test(b.type)?`m4a`:`webm`}`});rec.mr=null;if(tab===`tools`&&tool===`rec`)render()};
+mr.start();rec.mr=mr;rec.t0=Date.now();render();rec.iv=setInterval(function(){var m=$(`#rc-m`);var el=Math.round((Date.now()-rec.t0)/1000);if(el>=60&&rec.mr){rec.mr.stop();return}if(m)m.textContent=`Recording… ${mmss(el)} of 1:00`},500)}
 catch(e){var m=$(`#rc-m`);if(m)m.textContent=e&&e.name===`NotAllowedError`?`Microphone permission was denied. Allow it in your browser or iPhone settings and try again.`:`Recording isn’t available here. Try the GitHub Pages version in Safari or Chrome.`}}
 function tools_(){return `<div class='pill wide' role='group' aria-label='Tool'>${[[`tuner`,`Tuner`],[`met`,`Metronome`],[`play`,`Play along`],[`rec`,`Record`]].map(function(t){return `<button data-tool='${t[0]}' aria-pressed='${t[0]===tool}'>${t[1]}</button>`}).join(``)}</div>`+{tuner:tuner_,met:met_,play:play_,rec:rec_}[tool]()}
 function set_(){return `<h1>Settings</h1><div class='card'><p><b>${pesc(prof.name)}</b></p><p class='mu'>${LVQ[prof.lv][0]} · ${prof.sty.map(function(s){return STY.filter(function(x){return x[0]===s})[0][1]}).join(`, `)||`No styles picked`} · Goal: ${pesc(prof.goal)}</p><p><button class='btn' data-t='setup'>Change setup</button></p></div><h2>Handedness</h2>${hand()}<h2>Look</h2><div class='card'>${swHTML()}</div>`+bkHTML()}
@@ -710,14 +716,112 @@ ss(`gp_days`,JSON.stringify(days));if(prof)saveProf();saveSK();ss(`gp_left`,left
 function bkImport(txt){var d;try{d=JSON.parse(txt)}catch(e){return `That doesn’t look like exported progress.`}
 if(!d||d.app!==`guitar-practice`||!Array.isArray(d.days))return `That doesn’t look like exported progress.`;mergeIn(d);render();return `Imported. You now have ${days.length} practice days.`}
 function bkHTML(){return `<h2>Back up your progress</h2><div class='card'><p class='mu'>Your setup, skills and streak are saved on this device. Copy them to move to another device or keep a backup.</p><p><button class='btn go' id='bk-ex'>Copy my progress</button></p><p><b>Restore</b></p><textarea id='bk-in' rows='3' style='width:100%;font:14px var(--f);padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)' placeholder='Paste copied progress here'></textarea><p><button class='btn' id='bk-im'>Restore progress</button></p><p id='bk-msg' role='status' class='mu'></p></div>`}
+// ---- Group: accounts, shared progress, feed, riffs (Supabase) ----
+// The publishable key is meant to be public; the database rules in supabase-setup.sql are what protect the data.
+var SBU=`https://ywvoxkzfzdvcmgrnardt.supabase.co`,SBK=`sb_publishable_HU47m6fmKv7x09ZtcawpOw_AIhK8MWf`;
+var sb=null,me=null,G={g:null,mem:[],feed:[],urls:{},busy:false,at:0,msg:``,mode:`up`,edit:false,es:-1,nm:``};
+var EMO=[`🔥`,`👏`,`🎸`,`🤘`,`😂`,`❤️`,`🤯`,`💯`];
+function sbInit(){if(sb||!window.supabase)return;try{sb=supabase.createClient(SBU,SBK)}catch(e){sb=null;return}
+sb.auth.onAuthStateChange(function(ev,s){var u=s&&s.user||null,was=me&&me.id;me=u;if((u&&u.id)===was)return;
+if(u)setTimeout(sbPull,0);else{G.g=null;G.mem=[];G.feed=[];if(tab===`group`)render()}})}
+async function sbPull(){try{var r=await sb.from(`profiles`).select(`data`).eq(`id`,me.id).maybeSingle();if(r.data&&r.data.data)mergeIn(r.data.data);sbPush(true);await gLoad()}catch(e){}
+if(!prof&&tab===`group`)go(`setup`);else render()}
+var spt=null;
+function sbPush(now){if(!sb||!me||!prof)return;clearTimeout(spt);spt=setTimeout(function(){sb.from(`profiles`).upsert({id:me.id,name:prof.name,data:JSON.parse(bkData()),updated_at:new Date().toISOString()}).then(function(){})},now?0:1500)}
+async function gLoad(){if(!sb||!me)return;G.busy=true;try{
+var m=await sb.from(`members`).select(`groups(*)`).eq(`user_id`,me.id).limit(1);G.g=m.data&&m.data[0]?m.data[0].groups:null;
+if(G.g){ss(`gp_gc`,JSON.stringify(G.g.content||{}));applyContent(G.g.content);
+var mm=await sb.from(`members`).select(`user_id`).eq(`group_id`,G.g.id),ids=(mm.data||[]).map(function(x){return x.user_id});
+var pp=await sb.from(`profiles`).select(`id,name,data`).in(`id`,ids);G.mem=pp.data||[];
+var ps=await sb.from(`posts`).select(`id,user_id,kind,body,audio,created_at,reactions(emoji,user_id)`).eq(`group_id`,G.g.id).order(`created_at`,{ascending:false}).limit(30);G.feed=ps.data||[];
+var au=G.feed.filter(function(p){return p.audio}).map(function(p){return p.audio});G.urls={};
+if(au.length){var su2=await sb.storage.from(`riffs`).createSignedUrls(au,6*3600);(su2.data||[]).forEach(function(x){if(x.signedUrl)G.urls[x.path]=x.signedUrl})}}
+else{ss(`gp_gc`,`{}`);applyContent({})}}catch(e){}
+G.busy=false;G.at=Date.now();if(tab===`group`&&!G.edit)render()}
+// Owner-added songs: stripped of markup characters and limited to chords the app has diagrams for.
+function clean(v,n){return String(v||``).replace(/[<>&"'`]/g,``).trim().slice(0,n)}
+function cleanSong(s){if(!s||typeof s!==`object`)return null;var sec=(Array.isArray(s.s)?s.s:[]).slice(0,8).map(function(r){return[clean(r&&r[0],20)||`Part`,(Array.isArray(r&&r[1])?r[1]:[]).filter(function(c){return typeof c===`string`&&CH[c]}).slice(0,16)]}).filter(function(r){return r[1].length}),c=[],p=+s.p;
+if(!clean(s.n,40)||!sec.length)return null;sec.forEach(function(r){r[1].forEach(function(x){if(c.indexOf(x)<0)c.push(x)})});if(!(p>=0&&p<PT.length))p=0;
+return{n:clean(s.n,40),c:c,pats:[[`Strum`,p]],t:clean(s.t,120)||`Start slow, around 60 BPM.`,s:sec,x:clean(s.x,300)||`Added by your group.`,g:[],u:1}}
+function applyContent(c){for(var i=SONGS.length-1;i>=0;i--)if(SONGS[i].u)SONGS.splice(i,1);((c&&c.songs)||[]).forEach(function(s){var x=cleanSong(s);if(x&&!SONGS.some(function(y){return y.n===x.n}))SONGS.push(x)})}
+try{applyContent(JSON.parse(sg(`gp_gc`)||`{}`))}catch(e){}
+function week(ds){var n=0,d=new Date(),i;for(i=0;i<7;i++){if(ds.indexOf(d.getFullYear()+`-`+(d.getMonth()+1)+`-`+d.getDate())>-1)n++;d.setDate(d.getDate()-1)}return n}
+function ago(t){var s=(Date.now()-new Date(t).getTime())/1000;return s<60?`now`:s<3600?Math.floor(s/60)+`m`:s<86400?Math.floor(s/3600)+`h`:Math.floor(s/86400)+`d`}
+function nameOf(id){var m=G.mem.filter(function(x){return x.id===id})[0];return m&&m.name||`Someone`}
+function authHTML(){var up=G.mode===`up`;return (prof?``:`<button class='back' data-t='setup'>‹ Back</button>`)+`<h1>Group</h1><p class='mu'>Practice with friends: see each other’s progress, share riffs and react with emoji. ${up?`Make an account to start.`:`Sign in to your account.`}</p><div class='card'>`+(up?`<p class='lab'><label for='au-n'>Your name</label></p><input id='au-n' class='inp' maxlength='30' autocomplete='given-name' value='${pesc(prof?prof.name:``)}'>`:``)+`<p class='lab'><label for='au-e'>Email</label></p><input id='au-e' class='inp' type='email' autocomplete='email' inputmode='email'><p class='lab'><label for='au-p'>Password</label></p><input id='au-p' class='inp' type='password' autocomplete='${up?`new-password`:`current-password`}'>${up?`<p class='mu'>At least 6 characters.</p>`:``}<button class='big go' id='au-go'>${up?`Create account`:`Sign in`}</button><p class='mu' id='au-m' role='status'>${pesc(G.msg)}</p><p><button class='back' id='au-sw'>${up?`I already have an account`:`I need an account`}</button></p>${up?``:`<p class='mu'>Forgot your password? Ask whoever set up the group to reset it.</p>`}</div>`}
+async function auGo(){var e=$(`#au-e`).value.trim(),p=$(`#au-p`).value,n=$(`#au-n`),m=$(`#au-m`),nm=n?n.value.trim():``,r;
+if(n&&!nm){m.textContent=`Enter your name.`;n.focus();return}
+if(!e||p.length<6){m.textContent=`Enter your email and a password of at least 6 characters.`;return}
+m.textContent=`One moment…`;$(`#au-go`).disabled=true;
+try{r=G.mode===`up`?await sb.auth.signUp({email:e,password:p}):await sb.auth.signInWithPassword({email:e,password:p})}catch(er){r={error:{message:`Couldn’t reach the server. Check your connection.`}}}
+var b=$(`#au-go`);if(b)b.disabled=false;
+if(r.error){G.msg=r.error.message;m.textContent=G.msg;return}
+G.msg=``;if(nm){if(prof){prof.name=nm.slice(0,30);saveProf()}else G.nm=nm}
+if(!r.data.session)m.textContent=`Check your email to confirm your account, then sign in.`}
+function noGroupHTML(){return `<h1>Group</h1><p class='mu'>Signed in as ${pesc(me.email||``)}.</p><div class='card'><b>Join your friends</b><p class='mu'>Ask whoever made the group for the 6-character invite code.</p><input id='gj-c' class='inp' maxlength='6' autocapitalize='characters' autocomplete='off' aria-label='Invite code' placeholder='Invite code' style='text-transform:uppercase;letter-spacing:.12em'><button class='btn go' id='gj-go'>Join group</button></div><div class='card'><b>Or start a group</b><input id='gc-n' class='inp' maxlength='40' aria-label='Group name' placeholder='Group name'><button class='btn' id='gc-go'>Create group</button></div><p class='mu' id='g-m' role='status'>${pesc(G.msg)}</p><p><button class='btn' id='g-out'>Sign out</button></p>`}
+function memRow(m){var d=m.data||{},sk=d.sk&&typeof d.sk===`object`?d.sk:{},ds=Array.isArray(d.days)?d.days.filter(function(x){return typeof x===`string`}):[],sol=Object.keys(sk).filter(function(k){return SKI[k]&&sk[k]&&sk[k].st>=3}).length,wk=week(ds),s=streak(ds),gl=d.prof&&d.prof.goal?clean(d.prof.goal,40):``;
+return `<div class='card'><div class='row sb'><b>${pesc(m.name||`Someone`)}${m.id===me.id?`<span class='tag'>You</span>`:``}</b><span class='mu'>${s?`🔥 ${s}-day streak`:``}</span></div><p class='mu'>${sol} skill${sol===1?``:`s`} solid · ${wk} day${wk===1?``:`s`} this week${gl?` · Goal: ${gl}`:``}</p></div>`}
+function emoHTML(p){var cnt={},my={};(p.reactions||[]).forEach(function(r){cnt[r.emoji]=(cnt[r.emoji]||0)+1;if(r.user_id===me.id)my[r.emoji]=1});
+return `<div class='emo' role='group' aria-label='Reactions'>${EMO.map(function(e){return `<button data-re='${p.id}|${e}' aria-pressed='${!!my[e]}' aria-label='React ${e}${cnt[e]?`, ${cnt[e]} so far`:``}'>${e}${cnt[e]?`<b>${cnt[e]}</b>`:``}</button>`}).join(``)}${p.user_id===me.id?`<button class='del' data-pd='${p.id}'>Delete</button>`:``}</div>`}
+function postHTML(p){var u=p.audio&&G.urls[p.audio];return `<div class='card post'><div class='row sb'><b>${pesc(nameOf(p.user_id))}</b><span class='mu'>${ago(p.created_at)}</span></div>${p.kind===`milestone`?`<p>🏅 ${pesc(p.body)}</p>`:p.body?`<p>${pesc(p.body)}</p>`:``}${p.audio?u?`<audio controls preload='none' src='${pesc(u)}' style='width:100%;margin-top:6px'></audio>`:`<p class='mu'>Riff unavailable.</p>`:``}${emoHTML(p)}</div>`}
+function editHTML(){var g=G.g,cs=(g.content&&g.content.songs)||[],e=G.es>-1?cs[G.es]||{}:{},h=`<button class='back' id='ge-x'>‹ Group</button><h1>Edit group</h1><div class='card'><p class='lab'><label for='ge-n'>Group name</label></p><input id='ge-n' class='inp' maxlength='40' value='${pesc(g.name)}'><p class='lab'><label for='ge-s'>Group song</label></p><select id='ge-s' class='inp'><option value=''>None</option>${SONGS.map(function(s){return `<option${s.n===g.song?` selected`:``}>${pesc(s.n)}</option>`}).join(``)}</select><p class='mu'>Everyone sees how ready each person is for it.</p><button class='btn go' id='ge-save'>Save</button><p class='mu' id='ge-m' role='status'></p></div>`;
+h+=`<h2>Songs you’ve added</h2><p class='mu'>They show up in everyone’s Songs tab and can be goal songs. Type the chords from a chart you have; don’t paste lyrics.</p>`+(cs.length?cs.map(function(s,i){return `<div class='card row sb'><span><b>${pesc(clean(s.n,40))}</b></span><span class='row' style='gap:6px'><button class='btn' data-se='${i}'>Edit</button><button class='btn' data-sx='${i}'>Remove</button></span></div>`}).join(``):`<p class='mu'>None yet.</p>`);
+h+=`<div class='card'><b>${G.es>-1?`Edit song`:`Add a song`}</b><p class='lab'><label for='sf-n'>Song name</label></p><input id='sf-n' class='inp' maxlength='40' value='${pesc(clean(e.n,40))}'><p class='lab'><label for='sf-s'>Chords, one line per part</label></p><textarea id='sf-s' class='inp' rows='4' placeholder='Verse: G D Em C&#10;Chorus: C G D D'>${pesc((e.s||[]).map(function(r){return r[0]+`: `+r[1].join(` `)}).join(`\n`))}</textarea><p class='mu'>Each chord is one bar. Chords the app knows: ${Object.keys(CH).join(` `)}</p><p class='lab'><label for='sf-p'>Strum</label></p><select id='sf-p' class='inp'>${PT.map(function(p,i){return `<option value='${i}'${+e.p===i?` selected`:``}>${p.n}</option>`}).join(``)}</select><p class='lab'><label for='sf-t'>Tempo tip</label></p><input id='sf-t' class='inp' maxlength='120' placeholder='Start at 70 BPM.' value='${pesc(clean(e.t,120))}'><p class='lab'><label for='sf-x'>Notes</label></p><input id='sf-x' class='inp' maxlength='300' placeholder='Capo, tricky bits, where to find the full chart' value='${pesc(clean(e.x,300))}'><div class='row'><button class='btn go' id='sf-go'>${G.es>-1?`Save song`:`Add song`}</button>${G.es>-1?`<button class='btn' id='sf-new'>Cancel</button>`:``}</div><p class='mu' id='sf-m' role='status'></p></div>`;
+return h}
+function group_(){if(!sb)return `<h1>Group</h1><div class='card'><p>The group needs an internet connection. Check you’re online, then reopen the app.</p></div>`;
+if(!me)return authHTML();
+if(!G.g)return G.busy&&!G.at?`<h1>Group</h1><p class='mu'>Loading…</p>`:noGroupHTML();
+if(G.edit)return editHTML();
+var g=G.g,S=g.song&&SONGS.filter(function(s){return s.n===g.song})[0],h=`<div class='hello'><div><p class='mu'>Your group</p><h1>${pesc(g.name)}</h1></div><button class='circ' id='g-rf' aria-label='Refresh'>↻</button></div>`;
+h+=`<div class='card row sb'><span>Invite code <b style='letter-spacing:.12em'>${pesc(g.code)}</b></span><button class='btn' id='g-cp'>Share invite</button></div>`;
+if(S)h+=`<div class='card hero'><span class='lab'>Group song</span><p><b>${S.n}</b></p>`+G.mem.map(function(m){var sk=m.data&&m.data.sk||{};return `<div class='rs'><span>${pesc(m.name||`Someone`)}</span><span class='mu'>${songProg(S,sk)}% ready</span></div>`}).join(``)+(prof&&prof.goal!==S.n?`<button class='btn go' data-goal='${SONGS.indexOf(S)}'>Make it my goal too</button>`:``)+`</div>`;
+h+=`<h2>Everyone</h2>`+G.mem.map(memRow).join(``);
+h+=`<div class='row sb' style='margin-top:22px'><h2 style='margin:0'>Feed</h2><button class='btn go' id='g-rec'>🎙️ Share a riff</button></div>`;
+h+=G.feed.length?G.feed.map(postHTML).join(``):`<div class='card'><p class='mu'>Nothing yet. Share a riff, or get a skill to Solid and it shows up here.</p></div>`;
+return h+`<p class='mu' style='margin-top:24px'>Signed in as ${pesc(me.email||``)}</p><div class='row' style='flex-wrap:wrap;gap:8px'>${g.owner===me.id?`<button class='btn' id='g-ed'>Edit group</button>`:``}<button class='btn' id='g-lv'>Leave group</button><button class='btn' id='g-out'>Sign out</button></div><p class='mu' id='g-m' role='status'>${pesc(G.msg)}</p>`}
+async function gRpc(fn,a){var m=$(`#g-m`);if(m)m.textContent=`One moment…`;var r=await sb.rpc(fn,a);if(r.error){G.msg=r.error.message;render();return}
+G.msg=fn===`create_group`?`Group made. Tap “Share invite” to send your friends the code.`:``;await gLoad()}
+async function gSave(){var n=clean($(`#ge-n`).value,40),r;if(!n){$(`#ge-m`).textContent=`Give the group a name.`;return}
+r=await sb.from(`groups`).update({name:n,song:$(`#ge-s`).value}).eq(`id`,G.g.id);if(r.error){$(`#ge-m`).textContent=r.error.message;return}
+G.g.name=n;G.g.song=$(`#ge-s`).value;$(`#ge-m`).textContent=`Saved.`}
+async function saveContent(cs){var c=Object.assign({},G.g.content||{},{songs:cs.slice(0,50)}),r=await sb.from(`groups`).update({content:c}).eq(`id`,G.g.id);
+if(r.error){var m=$(`#sf-m`);if(m)m.textContent=r.error.message;return false}G.g.content=c;ss(`gp_gc`,JSON.stringify(c));applyContent(c);G.es=-1;render();return true}
+function sfSave(){var n=clean($(`#sf-n`).value,40),sec=[],bad=[],m=$(`#sf-m`),cs=((G.g.content||{}).songs||[]).slice(),old=G.es>-1&&cs[G.es];
+$(`#sf-s`).value.split(`\n`).forEach(function(l){if(!l.trim())return;var i=l.indexOf(`:`),lab=i>-1?clean(l.slice(0,i),20):`Part`,ch=(i>-1?l.slice(i+1):l).trim().split(/[\s,|]+/).filter(Boolean);
+ch.forEach(function(c){if(!CH[c]&&bad.indexOf(c)<0)bad.push(c)});if(ch.length)sec.push([lab||`Part`,ch])});
+if(!n||!sec.length){m.textContent=`Add a name and at least one line of chords.`;return}
+if(bad.length){m.textContent=`The app has no diagram for: ${bad.join(`, `)}. Swap in one it knows (they’re listed above).`;return}
+if(SONGS.some(function(s){return s.n===n&&!(old&&clean(old.n,40)===n)})){m.textContent=`There’s already a song called that.`;return}
+var s={n:n,p:+$(`#sf-p`).value,t:clean($(`#sf-t`).value,120),x:clean($(`#sf-x`).value,300),s:sec.slice(0,8)};
+if(G.es>-1)cs[G.es]=s;else cs.push(s);m.textContent=`Saving…`;saveContent(cs)}
+async function gLeave(){if(!confirm(`Leave ${G.g.name}? Your progress stays on your account.`))return;await sb.from(`members`).delete().match({group_id:G.g.id,user_id:me.id});G.g=null;G.msg=``;await gLoad();render()}
+function invite(){var u=location.origin+location.pathname,t=`Join my guitar group “${G.g.name}”. Open ${u}, tap Group, make an account and enter the code ${G.g.code}`,m=$(`#g-m`);
+if(navigator.share){navigator.share({text:t}).catch(function(){});return}
+try{navigator.clipboard.writeText(t).then(function(){m.textContent=`Invite copied. Paste it in your group chat.`},function(){m.textContent=t})}catch(e){m.textContent=t}}
+async function react(id,e,btn){var p=G.feed.filter(function(x){return x.id===id})[0],r,i;if(!p)return;p.reactions=p.reactions||[];
+i=p.reactions.findIndex(function(x){return x.user_id===me.id&&x.emoji===e});
+if(i>-1)p.reactions.splice(i,1);else p.reactions.push({emoji:e,user_id:me.id});
+btn.closest(`.emo`).outerHTML=emoHTML(p);
+r=i>-1?await sb.from(`reactions`).delete().match({post_id:id,user_id:me.id,emoji:e}):await sb.from(`reactions`).insert({post_id:id,emoji:e});
+if(r.error)gLoad()}
+async function delPost(id){var p=G.feed.filter(function(x){return x.id===id})[0];if(!p||!confirm(`Delete this post?`))return;
+if(p.audio)await sb.storage.from(`riffs`).remove([p.audio]);await sb.from(`posts`).delete().eq(`id`,id);gLoad()}
+async function shareTake(i){var t=rec.list[i],b=$(`[data-sh='${i}']`),c=$(`#rc-c${i}`),m=$(`#rc-m`);if(!t||t.sh||!G.g||!b)return;
+if(t.b.size>2e6){m.textContent=`That take is too big to share. Keep riffs under a minute.`;return}
+b.disabled=true;b.textContent=`Sharing…`;var ty=(t.b.type||`audio/webm`).split(`;`)[0],path=G.g.id+`/`+me.id+`/`+Date.now()+`.`+(/mp4|aac|m4a/.test(ty)?`m4a`:`webm`),u,r;
+u=await sb.storage.from(`riffs`).upload(path,t.b,{contentType:ty});
+if(!u.error){r=await sb.from(`posts`).insert({group_id:G.g.id,kind:`riff`,body:c?clean(c.value,200):``,audio:path});if(r.error){sb.storage.from(`riffs`).remove([path]);u=r}}
+if(u.error){b.disabled=false;b.textContent=`Try again`;m.textContent=`Couldn’t share: `+u.error.message;return}
+t.sh=1;if(tab===`tools`)render();gLoad()}
+function milestone(n,lv){if(sb&&me&&G.g)sb.from(`posts`).insert({group_id:G.g.id,kind:`milestone`,body:(n+` is now `+(lv===4?`Mastered`:`Solid`)).slice(0,200)}).then(function(){})}
 // ---- Shell ----
 var TB=`<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'>`;
-var TABS=[[`home`,`Practice`,TB+`<circle cx='12' cy='12' r='9'/><path d='M10 8.5l6 3.5-6 3.5z'/></svg>`],[`learn`,`Learn`,TB+`<path d='M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z'/><path d='M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z'/></svg>`],[`songs`,`Songs`,TB+`<path d='M9 18V5l11-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='17' cy='16' r='3'/></svg>`],[`tools`,`Tools`,TB+`<path d='M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6'/></svg>`]];
-var VIEWS={home:home_,sess:sess_,done:done_,setup:setup_,set:set_,learn:learn_,chords:chords_,strum:strum_,warm:warm_,scale:scale_,nums:nash_,links:links_,songs:songs_,tools:tools_};
+var TABS=[[`home`,`Practice`,TB+`<circle cx='12' cy='12' r='9'/><path d='M10 8.5l6 3.5-6 3.5z'/></svg>`],[`learn`,`Learn`,TB+`<path d='M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z'/><path d='M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z'/></svg>`],[`songs`,`Songs`,TB+`<path d='M9 18V5l11-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='17' cy='16' r='3'/></svg>`],[`group`,`Group`,TB+`<circle cx='9' cy='8' r='3.5'/><path d='M2.5 20a6.5 6.5 0 0 1 13 0'/><path d='M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6'/></svg>`],[`tools`,`Tools`,TB+`<path d='M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6'/></svg>`]];
+var VIEWS={home:home_,sess:sess_,done:done_,setup:setup_,set:set_,learn:learn_,chords:chords_,strum:strum_,warm:warm_,scale:scale_,nums:nash_,links:links_,songs:songs_,tools:tools_,group:group_};
 var PARENT={chords:`learn`,strum:`learn`,warm:`learn`,scale:`learn`,nums:`learn`,links:`learn`,set:`home`,setup:`set`},PNAME={learn:`Learn`,home:`Practice`,set:`Settings`};
 var lastTab=null;
 function render(){Object.keys(ANIM).forEach(anStop);pscroll(false);clearInterval(pa.yti);if(tuner.on)tunerStop();if(rec.mr&&!(tab===`tools`&&tool===`rec`))rec.mr.stop();
-if(!prof)tab=`setup`;if((tab===`sess`||tab===`done`)&&!sess)tab=`home`;
+if(!prof&&tab!==`group`)tab=`setup`;if((tab===`sess`||tab===`done`)&&!sess)tab=`home`;
 var top=tab===`setup`||tab===`set`||tab===`sess`||tab===`done`?`home`:PARENT[tab]||tab;
 document.body.classList.toggle(`full`,tab===`sess`||!prof);
 $(`#tabs`).innerHTML=TABS.map(function(t){return `<button data-t='${t[0]}' aria-current='${t[0]===top?`page`:`false`}'>${t[2]}${t[1]}</button>`}).join(``);
@@ -727,7 +831,7 @@ document.querySelectorAll(`details[data-an][open],div[data-an]`).forEach(anOpen)
 if($(`#ps-in`))paInit();
 if($(`#br`)){var r=$(`#br`);r.oninput=function(){setBpm(r.value)};$(`#mb`).onclick=toggleMet;if(tmr){$(`#mb`).textContent=`Stop`;$(`#mb`).setAttribute(`aria-pressed`,`true`)}}
 drawT()}
-function go(t){metStop();if(t===`setup`)su=null;if(t!==`done`&&tab===`done`)sess=null;tab=t;render();window.scrollTo(0,0)}
+function go(t){metStop();if(t===`group`){G.edit=false;gLoad()}if(t===`setup`)su=null;if(t!==`done`&&tab===`done`)sess=null;tab=t;render();window.scrollTo(0,0)}
 document.addEventListener(`click`,function(e){var x,g=function(s){return x=e.target.closest(s)};
 if(g(`[data-a]`)){acc=parseInt(x.getAttribute(`data-a`),10);ss(`gp_acc`,acc);applyAcc();render();return}
 if(g(`[data-m]`)){mode=x.getAttribute(`data-m`);ss(`gp_mode`,mode);applyAcc();render();return}
@@ -756,15 +860,35 @@ if(g(`[data-sty]`)){var sy=x.getAttribute(`data-sty`),si=su.sty.indexOf(sy);if(s
 if(g(`[data-lv]`)){su.lv=+x.getAttribute(`data-lv`);document.querySelectorAll(`[data-lv]`).forEach(function(b){b.setAttribute(`aria-pressed`,String(+b.getAttribute(`data-lv`)===su.lv))});return}
 if(g(`#su-go`)){saveSetup();return}
 if(g(`[data-tool]`)){tool=x.getAttribute(`data-tool`);render();return}
-if(g(`#rc-b`)){recToggle();return}});
+if(g(`#rc-b`)){recToggle();return}
+if(g(`#au-go`)){auGo();return}
+if(g(`#au-sw`)){G.mode=G.mode===`up`?`in`:`up`;G.msg=``;render();return}
+if(g(`#gj-go`)){var jc=$(`#gj-c`).value.trim();if(jc)gRpc(`join_group`,{jcode:jc});return}
+if(g(`#gc-go`)){var gn=clean($(`#gc-n`).value,40);if(gn)gRpc(`create_group`,{gname:gn});return}
+if(g(`#g-rf`)){gLoad();return}
+if(g(`#g-cp`)){invite();return}
+if(g(`#g-rec`)){tool=`rec`;go(`tools`);return}
+if(g(`#g-ed`)){G.edit=true;G.es=-1;render();window.scrollTo(0,0);return}
+if(g(`#ge-x`)){G.edit=false;render();window.scrollTo(0,0);return}
+if(g(`#ge-save`)){gSave();return}
+if(g(`[data-se]`)){G.es=+x.getAttribute(`data-se`);render();$(`#sf-n`).scrollIntoView();return}
+if(g(`#sf-new`)){G.es=-1;render();return}
+if(g(`[data-sx]`)){var xi=+x.getAttribute(`data-sx`),xs=((G.g.content||{}).songs||[]).slice();if(confirm(`Remove ${clean(xs[xi].n,40)}?`)){xs.splice(xi,1);saveContent(xs)}return}
+if(g(`#sf-go`)){sfSave();return}
+if(g(`#g-lv`)){gLeave();return}
+if(g(`#g-out`)){sb.auth.signOut();return}
+if(g(`[data-re]`)){var ra=x.getAttribute(`data-re`).split(`|`);react(ra[0],ra[1],x);return}
+if(g(`[data-pd]`)){delPost(x.getAttribute(`data-pd`));return}
+if(g(`[data-sh]`)){shareTake(+x.getAttribute(`data-sh`));return}});
 document.addEventListener(`toggle`,function(e){var d=e.target,id;if(!d||d.tagName!==`DETAILS`)return;id=d.getAttribute(`data-an`);if(!id)return;if(d.open)anOpen(d);else anStop(id)},true);
 var lastDay=today();
 document.addEventListener(`visibilitychange`,function(){if(document.hidden){if(tuner.on)tunerStop();if(tab!==`sess`)metStop();Object.keys(ANIM).forEach(anStop)}else{if(sess&&sess.run)tick();if(today()!==lastDay){lastDay=today();if(tab===`home`)render()}}});
 render();
 var cref=null,cst=null;
-function cloudSave(){if(!cref)return;clearTimeout(cst);cst=setTimeout(function(){try{cref.set({prof:prof,sk:SK,mins:mins,lefty:lefty,mode:mode,acc:acc,days:days,t:Date.now()}).catch(function(){})}catch(e){}},500)}
+function cloudSave(){sbPush();if(!cref)return;clearTimeout(cst);cst=setTimeout(function(){try{cref.set({prof:prof,sk:SK,mins:mins,lefty:lefty,mode:mode,acc:acc,days:days,t:Date.now()}).catch(function(){})}catch(e){}},500)}
 (async function(){try{if(!window.claude||!claude.use)return;var us=await claude.use(`user`),db=await claude.use(`db`);if(!us||!db)return;var id=await us.id();if(!id)return;cref=db.collection(`data/users/${id}`).doc(`progress`);var s=await cref.get();if(!s.exists){cloudSave();return}var d=s.data()||{};mergeIn(d);if(d.mode===`light`||d.mode===`dark`||d.mode===`system`)mode=d.mode;if(d.acc>=0&&d.acc<ACC.length)acc=d.acc;applyAcc();render();cloudSave()}catch(e){}})();
 try{if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js")}catch(e){}
 </script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js" onload="sbInit()"></script>
 </body>
 </html>
