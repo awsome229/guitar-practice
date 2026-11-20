@@ -14,40 +14,21 @@
 <title>Guitar Practice</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
-:root{--f:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--bg:#f4f4f5;--card:#fff;--tx:#111113;--mu:#6b6b72;--bd:#e2e2e5;--pri:#111113;--onp:#fff;--ac:#2563eb;--on:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-
-:root[data-mode="dark"]{--bg:#0e0e10;--card:#18181b;--tx:#f4f4f5;--mu:#a1a1aa;--bd:#2a2a2e;--pri:#f4f4f5;--onp:#111113;color-scheme:dark}
+:root{--f:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--bg:#f4f4f5;--card:#fff;--tx:#111113;--mu:#6b6b72;--bd:#e2e2e5;--pri:#111113;--onp:#fff;--ac:#2563eb;--on:#fff;color-scheme:light}
+:root[data-mode="dark"]{--bg:#0f0f11;--card:#1a1a1e;--tx:#f4f4f5;--mu:#a1a1aa;--bd:#2a2a30;--pri:#f4f4f5;--onp:#111113;color-scheme:dark}
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--f)}
-main{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 64px) 16px 40px}
-#bar{position:fixed;top:0;left:0;right:0;height:calc(env(safe-area-inset-top,0px) + 58px);background:var(--bg);border-bottom:1px solid var(--bd);z-index:10;display:flex;align-items:flex-end;padding:0 16px 14px;font:700 18px var(--f)}
-.dayrow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
-.dayrow button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:10px 0;font:600 14px var(--f);cursor:pointer;min-height:44px}
-.dayrow button[aria-pressed="true"]{background:var(--pri);color:var(--onp);border-color:var(--pri)}
-h1{font:600 28px/1.15 var(--f);margin:8px 0 2px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--f);-webkit-tap-highlight-color:transparent}
+main{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 110px)}
+body.full main{padding-bottom:40px}
+h1{font:700 28px/1.15 var(--f);margin:8px 0 4px;letter-spacing:-.01em}
 h2{font:600 20px/1.2 var(--f);margin:22px 0 8px}
 p{margin:6px 0}
 .mu{color:var(--mu);font-size:14px}
-#mbtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:14px;width:46px;height:46px;border-radius:10px;border:1px solid var(--bd);background:var(--card);cursor:pointer;z-index:12;padding:0}
-#mbtn i{position:absolute;left:13px;width:20px;height:2px;border-radius:1px;background:var(--tx);transition:transform .25s,opacity .2s,top .25s}
-#mbtn i:nth-child(1){top:16px}
-#mbtn i:nth-child(2){top:22px}
-#mbtn i:nth-child(3){top:28px}
-#mbtn.open i:nth-child(1){top:22px;transform:rotate(45deg)}
-#mbtn.open i:nth-child(2){opacity:0}
-#mbtn.open i:nth-child(3){top:22px;transform:rotate(-45deg)}
-@media (prefers-reduced-motion:reduce){#mbtn i{transition:none}}
-nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);right:14px;width:220px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px;z-index:11;display:none;max-height:calc(100dvh - 90px);overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-nav.open{display:block}
-nav button{display:block;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:8px;background:none;color:var(--tx);font:600 17px var(--f);cursor:pointer}
-nav button[aria-current="page"]{background:var(--pri);color:var(--onp)}
-nav .md{display:flex;gap:4px;padding:10px 8px 6px;border-top:1px solid var(--bd);margin-top:6px}
-nav .md button{flex:1;text-align:center;padding:8px 4px;font-size:14px;border:1px solid var(--bd)}
-nav .md button[aria-pressed="true"]{background:var(--pri);color:var(--onp);border-color:var(--pri)}
-nav .sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px}
-nav .sw button{display:block;width:100%;height:34px;padding:0;border-radius:6px;border:2px solid transparent}
-nav .sw button[aria-pressed="true"]{border-color:var(--tx);box-shadow:inset 0 0 0 2px var(--card)}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);background:var(--bg);border-top:1px solid var(--bd)}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){#tabs{background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}}
+#tabs button{background:none;border:0;color:var(--mu);font:600 11px var(--f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;cursor:pointer}
+#tabs button[aria-current=page]{color:var(--ac)}
+body.full #tabs{display:none}
 .song{border:1px solid var(--bd);border-radius:10px;background:var(--card);margin:10px 0;padding:0}
 .song>summary{padding:14px;font:600 19px var(--f);list-style:none;display:flex;justify-content:space-between;align-items:center}
 .song>summary::-webkit-details-marker{display:none}
@@ -77,11 +58,6 @@ nav .sw button[aria-pressed="true"]{border-color:var(--tx);box-shadow:inset 0 0 
 
 button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin:10px 0}
-.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bd);cursor:pointer}
-.chk:last-child{border:0}
-.chk input{width:24px;height:24px;margin-top:2px;accent-color:var(--ac);flex:none}
-.chk b{display:block}
-.chk input:checked+div{opacity:.5;text-decoration:line-through}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 .ch{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 8px 8px;text-align:center}
 .ch b{font:600 20px var(--f)}
@@ -108,13 +84,83 @@ summary{cursor:pointer;font-weight:600}
 .bar{border:1px solid var(--bd);border-radius:6px;padding:8px 2px;text-align:center;background:var(--bg)}
 .bar b{font:600 22px var(--f);color:var(--ac);display:block}
 .bar span{font-size:11px;color:var(--mu);display:block}
+#app.enter>*{animation:in .3s ease both}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hello{display:flex;justify-content:space-between;align-items:center;margin:4px 0 14px}
+.hello h1{font:800 30px/1.1 var(--f);letter-spacing:-.02em;margin:2px 0 0}
+.hello p{margin:0}
+.circ{width:44px;height:44px;border-radius:999px;border:1px solid var(--bd);background:var(--card);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer;font:600 22px var(--f);padding:0;flex:none}
+.card.hero{border-radius:20px;padding:18px}
+.lab{font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 4px}
+.hero .lab{margin:0}
+.sb{justify-content:space-between}
+.pill{display:inline-flex;background:var(--bg);border:1px solid var(--bd);border-radius:999px;padding:3px}
+.pill button{background:none;border:0;color:var(--mu);font:600 13px var(--f);white-space:nowrap;padding:7px 12px;border-radius:999px;min-height:36px;cursor:pointer}
+.pill button[aria-pressed=true]{background:var(--ac);color:var(--on)}
+.pill.wide{display:flex;margin:4px 0 8px}.pill.wide button{flex:1;padding:7px 4px}
+.steps{margin-top:10px}
+.stp{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--bd);animation:in .35s ease both}
+.ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.stp b{display:block;font-size:15px;line-height:1.3}.stp small{display:block;font-size:13px;color:var(--mu);line-height:1.3;margin-top:2px}
+.stp .m{margin-left:auto;font-size:13px;color:var(--mu);white-space:nowrap}
+.tag{font:700 11px var(--f);padding:2px 8px;border-radius:999px;margin-left:6px;background:color-mix(in srgb,var(--ac) 20%,transparent);color:var(--ac);vertical-align:2px;white-space:nowrap}
+.big.go{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;border:0;border-radius:14px;background:var(--ac);color:var(--on);font:700 17px var(--f);cursor:pointer;margin-top:12px}
+.big.go:active{transform:scale(.98)}
+.goal{display:flex;gap:14px;align-items:center;margin-top:10px}
+.ring{width:64px;height:64px;position:relative;flex:none}.ring span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{font:600 12px var(--f);padding:4px 9px;border-radius:999px;background:var(--bg);color:var(--mu);border:1px solid var(--bd)}
+.chip.s1,.chip.s2{color:var(--ac);border-color:var(--ac)}
+.chip.s3,.chip.s4{background:var(--ac);color:var(--on);border-color:var(--ac)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0}
+.dd{display:flex;flex-direction:column;align-items:center;gap:6px;font:600 12px var(--f);color:var(--mu)}
+.dd i{width:32px;height:32px;border-radius:999px;background:var(--bd)}
+.dd i.y{background:var(--ac)}.dd i.t{background:none;border:2px solid var(--ac)}
+.refs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.refs button{background:var(--card);border:1px solid var(--bd);border-radius:14px;color:var(--tx);font:600 13px var(--f);padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-height:72px}
+.refs span{font-size:20px}
+.list{padding:4px 14px}
+.sk{border-bottom:1px solid var(--bd);padding:0}.sk:last-child{border:0}
+.sk>summary{display:flex;align-items:center;gap:10px;padding:12px 0;list-style:none;font-weight:600}
+.sk>summary::-webkit-details-marker{display:none}
+.sk .nm{flex:1}.sk>summary .mu{font-weight:500;font-size:13px;white-space:nowrap}
+.sk>div{padding:0 0 12px}
+.dot{width:12px;height:12px;border-radius:999px;border:2px solid var(--mu);flex:none}
+.dot.s1{border-color:var(--ac)}.dot.s2{border-color:#f59e0b}.dot.s3{background:var(--ac);border-color:var(--ac)}.dot.s4{background:#22c55e;border-color:#22c55e}
+.back{background:none;border:0;color:var(--ac);font:600 16px var(--f);padding:8px 0;cursor:pointer;min-height:44px}
+.sx{display:flex;align-items:center;justify-content:space-between}
+.prog{display:flex;gap:4px;margin:12px 0 10px}.prog i{flex:1;height:4px;border-radius:2px;background:var(--bd)}.prog i.d{background:var(--ac)}.prog i.c{background:var(--ac);opacity:.5}
+.tmr{position:relative;width:150px;height:150px;margin:8px auto 4px}
+.tmr svg{width:100%;height:100%}.tmr circle{fill:none;stroke-width:8}.tr-bg{stroke:var(--bd)}.tr-fg{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.tmr button{position:absolute;inset:14px;border-radius:999px;border:0;background:none;color:var(--tx);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tmr b{font:800 32px var(--f)}.tmr span{font:600 13px var(--f);color:var(--mu)}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 24px}
+.rate button{background:var(--card);border:1px solid var(--bd);border-radius:14px;color:var(--tx);padding:12px 4px;font-size:24px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-height:84px}
+.rate b{font:600 13px var(--f)}
+.rate button.sug{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac) inset}
+.g1{grid-template-columns:minmax(0,170px);justify-content:center}.g2{grid-template-columns:repeat(2,minmax(0,160px));justify-content:center}
+.inp{width:100%;font:16px var(--f);padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);margin:6px 0 4px}
+.seg.col{flex-direction:column}.seg.col button{text-align:left;display:flex;flex-direction:column}.seg.col .mu{font-weight:400}
+.seg.col button[aria-pressed=true] .mu{color:inherit;opacity:.8}
+.recb{width:88px;height:88px;border-radius:999px;border:4px solid var(--bd);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;margin:8px auto}
+.recb i{width:36px;height:36px;border-radius:999px;background:#ef4444;transition:all .2s}
+.recb.on i{border-radius:8px;width:30px;height:30px;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+.done{text-align:center;padding:24px 0 8px}
+.ok{width:84px;height:84px;margin:0 auto 8px;border-radius:999px;background:var(--ac);color:var(--on);display:flex;align-items:center;justify-content:center;animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.rs{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.rs:last-child{border:0}
+.up{color:var(--ac)}
+.md{display:flex;gap:4px;padding:4px 0 10px}.md button{flex:1;text-align:center;padding:8px 4px;font:600 14px var(--f);border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);cursor:pointer;min-height:40px}
+.md button[aria-pressed=true]{background:var(--pri);color:var(--onp);border-color:var(--pri)}
+.sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.sw button{height:34px;border-radius:8px;border:2px solid transparent;cursor:pointer}
+.sw button[aria-pressed=true]{border-color:var(--tx);box-shadow:inset 0 0 0 2px var(--card)}
+@media (prefers-reduced-motion:reduce){#app.enter>*,.stp,.ok,.recb.on i{animation:none}.tr-fg{transition:none}}
 </style>
 </head>
 <body>
-<div id="bar">Guitar Practice</div>
 <main id="app"></main>
-<button id="mbtn" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
-<nav id="nav"></nav>
+<nav id="tabs" aria-label="Main"></nav>
 <script>
 var CH={
 Em:{f:[0,2,2,0,0,0],n:[0,2,3,0,0,0]},
@@ -134,34 +180,22 @@ Cmaj7:{f:[-1,3,2,0,0,0],n:[0,3,2,0,0,0]},
 Fmaj7:{f:[-1,-1,3,2,1,0],n:[0,0,3,2,1,0]},
 "F easy":{f:[-1,-1,3,2,1,1],n:[0,0,3,2,1,1],b:[1,4,5]},
 F:{f:[1,3,3,2,1,1],n:[1,3,4,2,1,1],b:[1,0,5]},
-Bm:{f:[-1,2,4,4,3,2],n:[0,1,3,4,2,1],b:[2,1,5]}
+Bm:{f:[-1,2,4,4,3,2],n:[0,1,3,4,2,1],b:[2,1,5]},
+Em7:{f:[0,2,2,0,3,0],n:[0,1,2,0,3,0]},
+Cadd9:{f:[-1,3,2,0,3,0],n:[0,2,1,0,3,0]},
+Dsus2:{f:[-1,-1,0,2,3,0],n:[0,0,0,1,3,0]},
+Dsus4:{f:[-1,-1,0,2,3,3],n:[0,0,0,1,2,3]},
+B7:{f:[-1,2,1,2,0,2],n:[0,2,1,3,0,4]},
+E5:{f:[0,2,2,-1,-1,-1],n:[0,1,2,0,0,0]}
 };
-var WK=[
-{t:"Week 1: Foundations",c:["Em","Am"],g:"Hit every string cleanly, no buzz. Switch Em and Am slowly, one minute at a time."},
-{t:"Week 2: More chords",c:["Em","Am","E","A","D"],g:"Practice Em to Am, E to A, A to D. Add steady downstrokes (1 2 3 4). Change without looking."},
-{t:"Week 3: Strumming",c:["Em","Am","E","A","D","G","C"],g:"Learn the folk pattern (down, down-up, up-down-up) from the Strum tab, with a metronome at 60 to 70 BPM. Keep the rhythm going even when chords are messy."},
-{t:"Week 4: First songs",c:["Em","Am","E","A","D","G","C"],g:"Play one full song, even slowly. Try Knockin’ on Heaven’s Door (G D Am), Horse with No Name (Em D), Stand By Me (G Em C D)."}
-];
-var STEPS=[
-["Tune up","1 min"],
-["Warm up","2 min. Press each finger down one at a time, then the spider walk (fingers 1-2-3-4 across frets 1 to 4 on each string)."],
-["Chord work","8 to 10 min. This week’s chords on the Today tab. Pick each string to find buzz, then practice switching."],
-["Strumming","3 to 5 min."],
-["Play something","2 to 3 min. End on a song or progression you enjoy."]
-];
 var $=function(s){return document.querySelector(s)};
 function sg(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function ss(k,v){try{localStorage.setItem(k,v)}catch(e){}cloudSave()}
 function today(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
-var week=parseInt(sg("gp_week")||"0",10);
-var ST=["3 to 5 min. Strum Em or Am with one down strum per click of the metronome below. Then switch between them without stopping your strumming hand.","3 to 5 min. One down strum per click of the metronome below (1 2 3 4). Switch chords on beat 1 without stopping your strumming hand.","3 to 5 min. Strum the folk pattern (down, down-up, up-down-up) to the metronome below. The Strum tab shows how.","3 to 5 min. Strum your song’s pattern to the metronome below while you play through its chords."];
-var tab="today";
+var tab="home";
 var lefty=sg("gp_left")==="1";
 function hand(){return '<div class="seg" role="group" aria-label="Handedness"><button aria-pressed="'+!lefty+'" data-h="r">Right-handed</button><button aria-pressed="'+lefty+'" data-h="l">Left-handed</button></div>'}
 var days=[];try{days=JSON.parse(sg("gp_days")||"[]")}catch(e){days=[]}
-var chk=[];try{var o=JSON.parse(sg("gp_chk")||"{}");if(o.d===today())chk=(o.c||[]).filter(function(x){return typeof x===`string`})}catch(e){chk=[]}
-function ck(i){return week+`:`+i}
-function saveChk(){ss("gp_chk",JSON.stringify({d:today(),c:chk}))}
 function dia(name){
 var c=CH[name],s='<svg viewBox="0 0 100 126" role="img" aria-label="'+name+' chord diagram">';
 var x0=15,dx=14,top=32,fh=17,i,f;
@@ -186,96 +220,21 @@ function sched(){while(nextT<ctx.currentTime+.15){clickAt(nextT,beat%4===0);beat
 function metStop(){if(tmr){clearInterval(tmr);tmr=null}var b=$("#mb");if(b){b.textContent="Start";b.setAttribute("aria-pressed","false")}}
 function toggleMet(){if(tmr){metStop();return}try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume()}catch(e){return}beat=0;nextT=ctx.currentTime+.05;sched();tmr=setInterval(sched,25);$("#mb").textContent="Stop";$("#mb").setAttribute("aria-pressed","true")}
 function setBpm(v){bpm=parseInt(v,10);$("#bv").textContent=bpm}
-var dayI=new Date().getDay();
 var DAYN=[`Sun`,`Mon`,`Tue`,`Wed`,`Thu`,`Fri`,`Sat`],FULL=[`Sunday`,`Monday`,`Tuesday`,`Wednesday`,`Thursday`,`Friday`,`Saturday`];
-var W=[
-{t:`Week 1: Viva la Vida`,song:`Viva la Vida`,loop:`C, D, G, Em`,sp:[1,4],hp:[`G`,`Em`],
- d:{2:{nc:`C`,pr:[`C`,`Am`]},3:{nc:`D`,pr:[`C`,`D`]},5:{nc:`G`,pr:[`G`,`Em`]}},
- thu:`Loop C to D to G slowly, then add Em. Stop and repeat whenever a change is rough.`,
- goal:`Play the C, D, G, Em loop all the way through, slowly.`},
-{t:`Week 2: Hurt`,song:`Hurt`,loop:`verse: Am, C, D. Chorus: Am, Fmaj7, C, G`,sp:[0,2],hp:[`Fmaj7`,`C`],
- d:{2:{nc:`Fmaj7`,pr:[`Fmaj7`,`C`]},3:{part:`The verse: Am, C, D. Loop it over and over until it is smooth.`,pr:[`D`,`Am`]},5:{part:`The chorus: Am, Fmaj7, C, G. Use the easy F (Fmaj7) for now.`,pr:[`C`,`G`]}},
- thu:`Loop the verse (Am, C, D), then loop the chorus. Join them when each one is clean.`,
- goal:`Play the verse and the chorus, slowly.`},
-{t:`Week 3: San Luis`,song:`San Luis`,loop:`Em, G, C, Am, D`,sp:[1,1],hp:[`C`,`D`],
- d:{2:{part:`The intro: Em, G, C. Loop it with a soft strum.`,pr:[`Em`,`G`]},3:{part:`The verse: Em, G, C, G, C, D. Take it two chords at a time.`,pr:[`C`,`D`]},5:{part:`The second half: Am, G, C, D. Then join it to the verse.`,pr:[`D`,`Am`]}},
- thu:`Loop the intro, then the verse. Keep the strum soft and even.`,
- goal:`Play the intro, verse and second half in a row.`},
-{t:`Week 4: Skinny Love`,song:`Skinny Love`,loop:`Am, G, C in one common version`,sp:[1,1],hp:[`Am`,`G`],
- d:{2:{part:`Pick a chart. Open Skinny Love on Ultimate Guitar and choose a version that only uses chords you know. Write its chords as numbers on the Numbers tab.`,pr:[`Am`,`G`]},3:{part:`The main loop of your chart. Loop it until it is smooth.`,pr:[`G`,`C`]},5:{part:`The chorus of your chart. Join it to the verse.`,pr:[`C`,`Am`]}},
- thu:`Loop the verse, then the chorus. Keep the strum steady.`,
- goal:`Play your chart from start to finish, slowly.`}
-];
-var WT=W.map(function(x){return x.t});
-if(!(week>=0&&week<W.length))week=0;
 var CTIP={Em:`Middle finger on the A string fret 2, ring finger on the D string fret 2. Strum all six strings.`,Am:`Index on the B string fret 1, middle on the D string fret 2, ring on the G string fret 2. Skip the low E string.`,E:`The Em shape plus your index finger on the G string fret 1. Strum all six strings.`,A:`Three fingers side by side on fret 2 of the D, G and B strings. Skip the low E string.`,D:`Index on the G string fret 2, middle on the high e string fret 2, ring on the B string fret 3. Strum only the top four strings.`,G:`Index on the A string fret 2, middle on the low E string fret 3, ring on the high e string fret 3. Strum all six strings.`,C:`Index on the B string fret 1, middle on the D string fret 2, ring on the A string fret 3. Skip the low E string.`,Dm:`Index on the high e string fret 1, middle on the G string fret 2, ring on the B string fret 3. Strum only the top four strings.`,A7:`Middle on the D string fret 2 and ring on the B string fret 2. The G and high e strings stay open. Skip the low E string.`,D7:`Index on the B string fret 1, middle on the G string fret 2, ring on the high e string fret 2. Strum only the top four strings.`,E7:`The E shape with your ring finger lifted off the D string. Strum all six strings.`,Asus2:`Index on the D string fret 2 and middle on the G string fret 2. Strum the top five strings.`,G7:`Index on the high e string fret 1, middle on the A string fret 2, ring on the low E string fret 3. Strum all six strings.`,Cmaj7:`Middle on the D string fret 2 and ring on the A string fret 3. The G, B and high e strings stay open. Skip the low E string.`,Fmaj7:`Index on the B string fret 1, middle on the G string fret 2, ring on the D string fret 3. The high e string stays open. Strum only the top four strings.`,"F easy":`Lay your index finger flat across the B and high e strings at fret 1. Middle on the G string fret 2, ring on the D string fret 3. Strum only the top four strings. This is the stepping stone to the full F.`,F:`The full F barre. Lay your index finger flat across all six strings at fret 1. Middle on the G string fret 2, ring on the A string fret 3, pinky on the D string fret 3. Press with the bony side of your index finger, close to the fret. It takes weeks to sound clean, so keep using the easy F while it builds.`,Bm:`Barre your index finger across fret 2 from the A string to the high e string. Middle on the B string fret 3, ring on the D string fret 4, pinky on the G string fret 4. Skip the low E string.`};
-function known(w,dow){var k=[`Em`,`Am`],i;for(i=0;i<w;i++)[2,3,5].forEach(function(d){var x=W[i].d[d];if(x&&x.nc)k.push(x.nc)});[2,3,5].forEach(function(d){var x=W[w].d[d];if(d<dow&&x&&x.nc)k.push(x.nc)});return k}
-function session(w,dow){
-if(dow===0)return{off:true};
-var Wk=W[w],dd=Wk.d[dow]||null,nc=dd&&dd.nc?dd.nc:null,kn=known(w,dow),B=[],sp=PT[dow>=5?Wk.sp[1]:Wk.sp[0]],pr=(dd&&dd.pr)||Wk.hp;
-function add(n,m,d,t,g){B.push({n:n,m:m,d:d,t:t||null,g:g||``})}
-function wu(m){add(`Warm-up`,m,`Tune up first (Tuner tab), then do a few spider walks to get your fingers moving.`,[`warm`,`the warm-ups`])}
-function rev(m){add(`Review chords`,m,`Form each chord you know, one at a time: ${kn.join(`, `)}. Pick the strings to check for buzz.`,[`chords`,`the chord diagrams`])}
-function newc(m){add(`New chord: ${nc}`,m,`Use the diagram above. Form it, pick each string to check for buzz, lift off, and form it again.`)}
-function part(m){add(`Song part`,m,dd.part)}
-function nxt(m){if(nc)newc(m);else part(m)}
-function chg(m){add(`Changes drill`,m,`Switch between ${pr[0]} and ${pr[1]} for a minute at a time. Count your clean changes and try to beat it next time.`)}
-function strum(m){add(`Strumming`,m,`${sp.n}. Strum it to the metronome below on any chord you know, then change chords without stopping your hand.`,[`strum`,`the strumming guide`],patGrid(sp.s))}
-function strings(m){add(`String names`,m,`Say E A D G B e while plucking each string, thickest to thinnest. Then test yourself: pick a string without looking and name it.`)}
-function names(m){add(`Chord names`,m,`Say a chord name from your list, form it without looking at the diagram, then check yourself.`)}
-function sc(m){add(`Scale`,m,`E minor pentatonic, open position. Play it up and back down, one note per click at 60 BPM.`,[`scale`,`the scale`])}
-if(dow===1){wu(2);rev(4);strum(4)}
-else if(dow===2){wu(2);nxt(5);chg(4);strum(4)}
-else if(dow===3){wu(2);if(w<2)strings(2);else names(2);nxt(5);chg(6);strum(5)}
-else if(dow===4){add(`Song chunks`,5,Wk.thu,[`songs`,`the song chart`]);strum(5)}
-else if(dow===5){wu(3);nxt(5);chg(6);strum(5);if(w>=1)sc(4);else strings(4);add(`Play something`,2,`Play what you have so far of ${Wk.song}.`)}
-else{wu(3);rev(5);strum(5);if(w>=1)sc(4);else chg(4);add(`Play the whole song`,6,`Play ${Wk.song} from the start, slowly (${Wk.loop}). Keep going through mistakes.`,[`songs`,`the song chart`]);add(`Record yourself`,2,`Record yourself on your phone and listen back. Note one thing to fix next week.`)}
-return{b:B,nc:nc}}
-function today_(){
-var rd=new Date().getDay(),isT=dayI===rd,h=`<h1>${isT?`Today’s practice`:FULL[dayI]}</h1>`;
-h+=`<div class='seg' role='group' aria-label='Week'>`+WT.map(function(x,i){return `<button aria-pressed='${i===week}' data-w='${i}'>Week ${i+1}</button>`}).join(``)+`</div><p class='mu'>${WT[week]}. Goal: ${W[week].goal}</p>`;
-h+=`<div class='dayrow' role='group' aria-label='Day'>`+[1,2,3,4,5,6,0].map(function(d){return `<button aria-pressed='${d===dayI}' data-d='${d}'>${DAYN[d]}</button>`}).join(``)+`</div>`;
-var S=session(week,dayI),kn=known(week,dayI);
-if(S.off){h+=`<div class='card'><b>Rest day</b><p>Sunday is off. If you feel like it, pick up the guitar for 5 minutes and play whatever you enjoy.</p></div>`}
-else{
-var mins=0;S.b.forEach(function(x){mins+=x.m});
-h+=`<p class='mu'>${mins} minutes${isT?``:` (preview)`}</p>`;
-if(S.nc)h+=`<h2>New chord: ${S.nc}</h2>`+hand()+`<div class='grid'>${chordCard(S.nc)}</div><p>${CTIP[S.nc]}</p>`;
-h+=`<h2>Session</h2><div class='card'>`;
-S.b.forEach(function(x,i){var tl=x.t?`<div style='margin-top:6px'><button class='btn' data-t='${x.t[0]}'>Open ${x.t[1]}</button></div>`:``;
-h+=`<label class='chk'>`+(isT?`<input type='checkbox' data-s='${i}'${chk.indexOf(ck(i))>-1?` checked`:``}>`:`<span style='width:24px;flex:none'>${i+1}.</span>`)+`<div><b>${x.n} (${x.m} min)</b><span class='mu'>${x.d}</span>${x.g||``}${tl}</div></label>`});
-h+=`</div>`;
-var k2=S.nc?kn.concat([S.nc]):kn;
-if(k2.length)h+=`<details class='song'><summary>Chords so far (${k2.length})</summary><div class='card'>${S.nc?``:hand()}<div class='grid'>${k2.map(chordCard).join(``)}</div></div></details>`;
-h+=`<h2>Metronome</h2>`+met();
-var done=days.indexOf(today())>-1;
-h+=`<div class='card'><div class='stats'><div><div class='st'>${streak()}</div><span class='mu'>day streak</span></div><div><div class='st'>${days.length}</div><span class='mu'>days practiced</span></div></div>`+(isT?`<p><button class='btn go' id='dn'>${done?`Practiced today ✓`:`I practiced today`}</button></p>`:``)+`</div>`}
-return h}
+Object.assign(CTIP,{Em7:`The Em shape plus your ring finger on the B string fret 3. Strum all six strings.`,Cadd9:`Middle on the A string fret 3, index on the D string fret 2, ring on the B string fret 3. Skip the low E string.`,Dsus2:`The D shape with your middle finger lifted, so the high e string rings open. Strum the top four strings.`,Dsus4:`Index on the G string fret 2, middle on the B string fret 3, ring on the high e string fret 3. Rock between D and Dsus4 for a classic sound.`,B7:`Middle on the A string fret 2, index on the D string fret 1, ring on the G string fret 2, pinky on the high e string fret 2. The B string stays open. Skip the low E string.`,E5:`Power chord. Index on the A string fret 2, middle on the D string fret 2, and strum only the three thickest strings. For A5, move it over: open A string plus fret 2 on the D and G strings.`});
 function chords_(){
 var h='<h1>Chords</h1><p class="mu">Dots show where to press. Numbers are fingers: 1 index, 2 middle, 3 ring, 4 pinky. × means skip that string, ○ means play it open.</p>'+hand()+[["Open chords",["Em","Am","E","A","D","G","C"]],["Sevenths and suspended",["Dm","A7","D7","E7","Asus2","G7","Cmaj7"]],["F and barre chords",["Fmaj7","F easy","F","Bm"]]].map(function(g){return '<h2>'+g[0]+'</h2><div class="grid">'+g[1].map(chordCard).join("")+'</div>'}).join("")+'<div class="card"><b>How to barre</b><p>Lay your index finger flat across the strings, using the bony side of the finger, as close behind the fret as you can. Keep your thumb behind the neck and press with your arm, not just a squeeze. Pick each string to find the buzz, then shift your finger a little. Expect it to sound rough for a few weeks.</p><p>Start with Fmaj7, then F easy, and move to the full F once those feel fine.</p></div>';
 h+='<h2>Fixing a bad chord</h2><div class="card"><p>Pick the strings one at a time. A buzz or dead note tells you which finger to fix.</p><p>Press just behind the fret, with arched fingertips, using only the force you need.</p><p>Keep shared fingers planted when you change chords (Am to C shares the B-string finger).</p></div>';
 
 return h}
-function bkData(){return JSON.stringify({app:`guitar-practice`,v:1,week:week,lefty:lefty,mode:mode,acc:acc,days:days})}
-function bkImport(txt){var d;try{d=JSON.parse(txt)}catch(e){return `That doesn’t look like exported progress.`}
-if(!d||d.app!==`guitar-practice`||!Array.isArray(d.days))return `That doesn’t look like exported progress.`;
-var set={},out=[];days.concat(d.days).forEach(function(x){if(typeof x===`string`&&/^\d{4}-\d{1,2}-\d{1,2}$/.test(x)&&!set[x]){set[x]=1;out.push(x)}});days=out;
-if(d.week>=0&&d.week<W.length)week=d.week;if(typeof d.lefty===`boolean`)lefty=d.lefty;
-ss(`gp_days`,JSON.stringify(days));ss(`gp_week`,week);ss(`gp_left`,lefty?`1`:`0`);render();return `Imported. You now have ${days.length} practice days.`}
-function bkHTML(){return `<h2>Back up your progress</h2><div class='card'><p class='mu'>Your streak and week are saved on this device. Copy them to move to another device or keep a backup.</p><p><button class='btn go' id='bk-ex'>Copy my progress</button></p><p><b>Restore</b></p><textarea id='bk-in' rows='3' style='width:100%;font:14px var(--f);padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)' placeholder='Paste copied progress here'></textarea><p><button class='btn' id='bk-im'>Restore progress</button></p><p id='bk-msg' role='status' class='mu'></p></div>`}
-function plan_(){
-var h=`<h1>Weekly plan</h1><p class='mu'>One song per week. New chords come on Tuesday, Wednesday and Friday when the song needs them. Saturday is song day. Sunday is a rest day. The scale starts in week 2.</p>`;
-h+=`<div class='card'><b>Your week</b><p><b>Mon</b> 10 min. Light review.</p><p><b>Tue</b> 15 min. New chord or song part.</p><p><b>Wed</b> 20 min. New chord or song part.</p><p><b>Thu</b> 10 min. Song chunks (work night).</p><p><b>Fri</b> 25 min. New chord or song part, plus the scale.</p><p><b>Sat</b> 25 min. Play the whole song and record it.</p><p><b>Sun</b> Rest.</p></div>`;
-W.forEach(function(x){var nw=[2,3,5].map(function(d){return x.d[d].nc}).filter(Boolean);h+=`<div class='card'><b>${x.t}</b><p>Goal: ${x.goal}</p><p class='mu'>New chords: ${nw.length?nw.join(`, `):`none`}</p><p class='mu'>Strumming: ${PT[x.sp[0]].n}${x.sp[1]!==x.sp[0]?`, then ${PT[x.sp[1]].n}`:``}</p></div>`});
-h+=`<h2>Rules that matter most</h2><div class='card'><p>Slow beats fast. Add 5 BPM only after four clean bars in a row.</p><p>Drill the hardest change in each song, not the whole song.</p><p>Short and regular beats long and rare, so the light days count.</p><p>After week 4, pick your next songs. The Chords tab still has E, A, the sevenths and the full F barre chord for when you want them.</p></div>`;
-return h+bkHTML()}
-function learn_(){
+function links_(){
 return '<h1>Where to learn</h1><div class="card"><p><a href="https://www.justinguitar.com" target="_blank" rel="noopener">JustinGuitar</a><br><span class="mu">Free. Start with Beginner Grade 1. Best structured course for self-taught beginners.</span></p><p><a href="https://www.youtube.com/results?search_query=justinguitar+beginner+grade+1" target="_blank" rel="noopener">Grade 1 on YouTube</a><br><span class="mu">Same lessons as video.</span></p><p><a href="https://www.ultimate-guitar.com" target="_blank" rel="noopener">Ultimate Guitar</a><br><span class="mu">Search any song name to get its chords. Tap a chord to see the diagram.</span></p><p><a href="https://chordify.net" target="_blank" rel="noopener">Chordify</a><br><span class="mu">Shows chords of songs as they play.</span></p><p><span class="mu">Optional paid guided apps: Fender Play, Yousician.</span></p></div><h2>Handy facts</h2><div class="card"><details><summary>String names, thick to thin</summary><p>E A D G B e</p></details><details><summary>Gear checklist</summary><p>Tuner (clip-on or app), a few medium picks (about 0.73mm), a capo later. A shop setup (about $50 to 80) makes cheap guitars much easier to play.</p></details><details><summary>Care</summary><p>Keep it away from heat, direct sun, and very dry rooms. New strings go out of tune often, so retune.</p></details></div>'}
 function met(){return `<div class='card'><div class='row'><div class='bpm' id='bv'>${bpm}</div><span class='mu'>BPM</span><button class='btn go' id='mb' aria-pressed='false'>Start</button></div><div class='row'><input type='range' id='br' min='40' max='140' value='${bpm}' aria-label='Tempo'></div></div>`}
 var PT=[
 {n:`Level 1: Downs only`,s:`D-D-D-D-`,d:`One down strum on each beat. Start here and focus on clean chords and steady timing.`},
 {n:`Level 2: Steady down-up`,s:`DUDUDUDU`,d:`Your hand never stops. Downs land on the numbers, ups land on the “&amp;”.`},
-{n:`Level 3: The folk pattern`,s:`D-DU-UDU`,d:`The pattern from week 3 (down, down-up, up-down-up). Your hand still swings down-up the whole time, but it skips the strings on the dots.`},
+{n:`Level 3: The folk pattern`,s:`D-DU-UDU`,d:`The classic strumming pattern (down, down-up, up-down-up). Your hand still swings down-up the whole time, but it skips the strings on the dots.`},
 {n:`Level 4: Campfire`,s:`D-DUDUDU`,d:`Like the folk pattern, with an extra up on beat 3. Fuller and busier, so learn the folk pattern first.`},
 {n:`Driving pattern`,s:`D-D-DUDU`,d:`Downs on 1, 2, 3 and 4, with ups on the “&” after 3 and 4. A steady marching pulse that fits Viva la Vida. The empty slots still get a swing of your hand.`}
 ];
@@ -301,13 +260,27 @@ var SONGS=[
 {n:`Horse with No Name`,c:[`Em`,`D`],pats:[[`Start with`,0],[`Then try`,1]],t:`Start at 60 BPM`,s:[[`Loop`,[`Em`,`Em`,`D`,`D`]]],x:`Just two chords. Start with downs only, then try the steady down-up pattern.`},
 {n:`Stand By Me`,c:[`G`,`Em`,`C`,`D`],pats:[[`Strum`,2]],t:`Start at 60 BPM, work toward 100`,s:[[`Loop (repeats through the song)`,[`G`,`G`,`Em`,`Em`,`C`,`D`,`G`,`G`]]],x:`Eight bars, repeated. Practice G to Em to C to D on its own first.`}
 ];
+SONGS.push(
+{n:`Let It Be`,c:[`C`,`G`,`Am`,`Fmaj7`],pats:[[`Strum`,1]],t:`Start at 60 BPM. The recording is around 72.`,s:[[`Verse`,[`C`,`G`,`Am`,`Fmaj7`]],[`Then`,[`C`,`G`,`Fmaj7`,`C`]]],x:`The F is played as Fmaj7 until the barre F is ready. Check the full chart for the order.`},
+{n:`Wagon Wheel`,c:[`G`,`D`,`Em`,`C`],pats:[[`Strum`,2]],t:`Start at 70 BPM. The recording is much faster.`,s:[[`Loop`,[`G`,`D`,`Em`,`C`]],[`Then`,[`G`,`D`,`C`,`C`]]],x:`Two loops repeat through the whole song. Charts often add a capo on fret 2.`},
+{n:`Brown Eyed Girl`,c:[`G`,`C`,`D`,`Em`],pats:[[`Strum`,4]],t:`Start at 70 BPM.`,s:[[`Verse`,[`G`,`C`,`G`,`D`]],[`Chorus`,[`C`,`D`,`G`,`Em`]]],x:`The intro riff comes later. Strum the chords first, and check the full chart for the order.`},
+{n:`Sweet Home Alabama`,c:[`D`,`C`,`G`],pats:[[`Strum`,2]],t:`Start at 70 BPM.`,s:[[`Loop`,[`D`,`C`,`G`,`G`]]],x:`D, C, G nearly all the way through. Charts often play the C as Cadd9. The famous lick comes later.`},
+{n:`Three Little Birds`,c:[`A`,`D`,`E`],pats:[[`Start with`,1]],t:`Start at 70 BPM. Relaxed.`,s:[[`Chorus`,[`A`,`A`,`D`,`A`]],[`Verse`,[`A`,`E`,`A`,`D`]]],x:`The real feel is an offbeat reggae chop. Start with steady down-up, then try muted strums. Check the full chart for the order.`},
+{n:`Bad Moon Rising`,c:[`D`,`A`,`G`],pats:[[`Strum`,2]],t:`Start at 80 BPM.`,s:[[`Verse`,[`D`,`A`,`G`,`D`]],[`Chorus`,[`G`,`D`,`A`,`G`]]],x:`Short, punchy changes. Check the full chart for how long each chord lasts.`},
+{n:`Zombie`,c:[`Em`,`C`,`G`,`D`],pats:[[`Strum`,4]],t:`Start at 70 BPM.`,s:[[`Loop`,[`Em`,`C`,`G`,`D`]]],x:`One loop for the whole song. Some charts use Em7 and Cmaj7 for a softer sound.`},
+{n:`Leaving on a Jet Plane`,c:[`G`,`C`,`D`],pats:[[`Strum`,2]],t:`Start at 70 BPM.`,s:[[`Verse`,[`G`,`C`,`G`,`C`]],[`Then`,[`G`,`C`,`D`,`D`]]],x:`Good for practicing bass note, then strum.`},
+{n:`Folsom Prison Blues`,c:[`E`,`A`,`B7`],pats:[[`Strum`,0]],t:`Start at 80 BPM.`,s:[[`Start`,[`E`,`E`,`E`,`E`]],[`Middle`,[`A`,`A`,`E`,`E`]],[`End`,[`B7`,`B7`,`E`,`E`]]],x:`Play it boom-chuck: bass note on 1 and 3, strum on 2 and 4. Check the full chart for exact bar counts.`},
+{n:`12-bar blues in A`,c:[`A7`,`D7`,`E7`],pats:[[`Strum`,4]],t:`Start at 80 BPM with a shuffle feel.`,s:[[`Bars 1 to 4`,[`A7`,`A7`,`A7`,`A7`]],[`Bars 5 to 8`,[`D7`,`D7`,`A7`,`A7`]],[`Bars 9 to 12`,[`E7`,`D7`,`A7`,`E7`]]],x:`Not one song but the shape behind thousands of them. Loop it and make up riffs over it.`}
+);
+var SG={"Viva la Vida":[`pop`,`rock`],"Hurt":[`folk`,`rock`],"San Luis":[`indie`],"Skinny Love":[`indie`,`folk`],"Big Black Car (bonus)":[`indie`],"Knockin’ on Heaven’s Door":[`rock`,`folk`],"Horse with No Name":[`folk`],"Stand By Me":[`pop`],"Let It Be":[`pop`,`rock`],"Wagon Wheel":[`country`,`folk`],"Brown Eyed Girl":[`pop`,`rock`],"Sweet Home Alabama":[`rock`,`country`],"Three Little Birds":[`pop`],"Bad Moon Rising":[`rock`,`country`],"Zombie":[`rock`,`indie`],"Leaving on a Jet Plane":[`folk`],"Folsom Prison Blues":[`country`,`blues`],"12-bar blues in A":[`blues`,`rock`]};
+SONGS.forEach(function(s){s.g=SG[s.n]||[]});
 function songs_(){
-var h=`<h1>Songs</h1><p class='mu'>Each box is one bar of 4 beats. Play the strum pattern once per box, and switch chords when the box changes. Keep your hand swinging through the change. This page shows chord shapes, strum patterns and bar layout. For lyrics lined up over the chords, use the Ultimate Guitar link under each song. The patterns are simple starting points, not note-for-note copies of the recordings.</p>`+hand();
-SONGS.forEach(function(s){
-h+=`<details class='song'><summary>${s.n}</summary><div class='card'><p class='mu'>${s.t}</p><b>Chords you need</b><div class='grid'>${s.c.map(chordCard).join('')}</div>`;
+var h=`<h1>Songs</h1><p class='mu'>Your goal song shapes your sessions. Tap a song for its chords, strum and bar layout. Each box is one bar of 4 beats.</p>`+hand();
+SONGS.map(function(s,i){return{s:s,i:i,f:(prof&&prof.goal===s.n?1e4:0)+(prof?s.g.filter(function(g){return prof.sty.indexOf(g)>-1}).length*200:0)+songProg(s)}}).sort(function(a,b){return b.f-a.f}).forEach(function(o){var s=o.s,gl=prof&&prof.goal===s.n;
+h+=`<details class='song'${gl?` open`:``}><summary><span>${s.n}${gl?`<span class='tag'>Goal</span>`:``}<small class='mu' style='display:block;font:500 13px var(--f)'>${s.c.join(` · `)} · ${songProg(s)}% ready</small></span></summary><div class='card'><p class='mu'>${s.t}</p><b>Chords you need</b><div class='grid'>${s.c.map(chordCard).join('')}</div>`;
 s.pats.forEach(function(q){var p=PT[q[1]];h+=`<p><b>${q[0]}:</b> ${p.n}</p>${patGrid(p.s)}`});
 s.s.forEach(function(r){h+=`<p><b>${r[0]}</b></p><div class='bars'>${r[1].map(function(c){return `<div class='bar'><b>${c}</b><span>1 2 3 4</span></div>`}).join('')}</div>`});
-h+=`<p class='mu'>${s.x}</p><p><a href='https://www.ultimate-guitar.com/search.php?search_type=title&amp;value=${encodeURIComponent(s.n.replace(` (bonus)`,``))}' target='_blank' rel='noopener'>Find the full chart on Ultimate Guitar</a></p></div></details>`});
+h+=`<p class='mu'>${s.x}</p><p><a href='https://www.ultimate-guitar.com/search.php?search_type=title&amp;value=${encodeURIComponent(s.n.replace(` (bonus)`,``))}' target='_blank' rel='noopener'>Find the full chart on Ultimate Guitar</a></p>`+(gl?``:`<p><button class='btn go' data-goal='${o.i}'>Make this my goal</button></p>`)+`</div></details>`});
 return h}
 var KEYS={C:[`C`,`Dm`,`Em`,`F`,`G`,`Am`,`Bdim`],G:[`G`,`Am`,`Bm`,`C`,`D`,`Em`,`F#dim`],D:[`D`,`Em`,`F#m`,`G`,`A`,`Bm`,`C#dim`],A:[`A`,`Bm`,`C#m`,`D`,`E`,`F#m`,`G#dim`],E:[`E`,`F#m`,`G#m`,`A`,`B`,`C#m`,`D#dim`]};
 var NUM=[`1`,`2m`,`3m`,`4`,`5`,`6m`,`7°`];
@@ -353,7 +326,7 @@ var h=`<h1>Warm-ups</h1><p class='mu'>Two to five minutes before you play loosen
 h+=`<div class='card'><p><b>Quick routine</b></p><p>2 min: spider walk</p><p>1 min: silent chord shapes</p><p>1 min: picking open strings</p><p>30 sec: one finger at a time</p></div>`;
 h+=`<details class='song' data-an='spider' open><summary>Spider walk (2 min)</summary><div class='card'><p>The spider walk trains each finger to land on its own fret. Watch where each finger goes, then copy it on your guitar. The animation takes one step per second, which matches the metronome at 60 BPM.</p>${anBox('spider')}<p><b>1.</b> Put your index finger (1) on fret 1 of the thickest string, just behind the fret. Pick the note.</p><p><b>2.</b> Add your middle finger (2) on fret 2, ring (3) on fret 3, and pinky (4) on fret 4. Pick each note as you go.</p><p><b>3.</b> Move to the next string and repeat. Work across all six strings, then come back.</p><p><b>4.</b> Use the metronome at 60 BPM, one note per click, and make every note ring clearly.</p><p><b>Tips.</b> Keep your thumb behind the neck and your fingers arched. Keep fingertips close to the strings between notes instead of flying up. Press only as hard as you need. A weak pinky is normal and gets stronger.</p><p><b>Variations.</b> 1-3-2-4, 1-2-4-3, and 4-3-2-1 (pinky first). After a week or two, start the pattern at fret 2, then fret 3. Higher up the neck the frets are closer together, so the stretch is easier.</p></div></details>`;
 h+=`<details class='song' data-an='press'><summary>One finger at a time (30 sec)</summary><div class='card'>${anBox('press')}<p>Press each finger on a fret, one at a time, and hold for 2 seconds before releasing. Pick the string to check it rings clean. This builds the habit of pressing just behind the fret with a light, even touch.</p></div></details>`;
-h+=`<details class='song' data-an='chord'><summary>Silent chord shapes (1 min)</summary><div class='card'>${anBox('chord')}<p>Pick a chord from this week. Form the shape without strumming, then lift your fingers off completely and form it again. Do this 10 times, then pick each string to check for buzz. This is what makes chord changes faster, because your hand learns the shape as a whole.</p></div></details>`;
+h+=`<details class='song' data-an='chord'><summary>Silent chord shapes (1 min)</summary><div class='card'>${anBox('chord')}<p>Pick a chord you are learning. Form the shape without strumming, then lift your fingers off completely and form it again. Do this 10 times, then pick each string to check for buzz. This is what makes chord changes faster, because your hand learns the shape as a whole.</p></div></details>`;
 h+=`<details class='song' data-an='pick'><summary>Picking open strings (1 min)</summary><div class='card'>${anBox('pick')}<p>With no fretting hand at all, pick each open string with alternating down and up strokes, from the low E to the high e and back. Use the metronome at 60 BPM and keep your picking wrist loose. This warms up your picking hand and trains it to move evenly.</p></div></details>`;
 h+=`<h2>Metronome</h2>`+met();
 return h}
@@ -363,8 +336,8 @@ for(i=0;i<=5;i++)s+=`<line x1='${x0}' y1='${top+i*fh}' x2='${x0+5*dx}' y2='${top
 pts.forEach(function(p){var x=x0+(lefty?5-p[0]:p[0])*dx,y;if(p[1]===0)s+=`<circle cx='${x}' cy='19' r='4' fill='none' stroke='var(--ac)' stroke-width='2'/>`;else{y=top+(p[1]-.5)*fh;s+=`<circle cx='${x}' cy='${y}' r='6.5' fill='var(--ac)'/><text x='${x}' y='${y+4}' text-anchor='middle' font-size='10' font-weight='700' fill='var(--on)'>${p[2]}</text>`}});
 return s+`<text x='50' y='122' text-anchor='middle' font-size='8' fill='var(--mu)'>${lefty?'e B G D A E':'E A D G B e'}</text></svg>`}
 function scale_(){
-var h=`<h1>Scale: E minor pentatonic</h1><p class='mu'>The most useful first scale. It has five notes, sits in the open position, and uses the same finger moves as the spider walk. Many rock and blues riffs and solos come from it. It starts in week 2, on Fridays and Saturdays.</p>`+hand();
-h+=`<div class='card'><div style='max-width:160px;margin:0 auto'>${fb([[0,0],[0,3,3],[1,0],[1,2,2],[2,0],[2,2,2],[3,0],[3,2,2],[4,0],[4,3,3],[5,0],[5,3,3]])}</div><p class='mu'>Open circles are open strings. Dots show the fret and the finger to use.</p></div>`;
+var h=`<h1>Scale: E minor pentatonic</h1><p class='mu'>The most useful first scale. It has five notes, sits in the open position, and uses the same finger moves as the spider walk. Many rock and blues riffs and solos come from it. </p>`+hand();
+h+=`<div class='card'><div style='max-width:160px;margin:0 auto'>${fb(PENT)}</div><p class='mu'>Open circles are open strings. Dots show the fret and the finger to use.</p></div>`;
 h+=`<h2>How to play it</h2><div class='card'><p><b>Notes:</b> E G | A B | D E | G A | B D | E G</p><p><b>1.</b> On each string, play the open string, then the fretted note: fret 3 on the low E, fret 2 on A, D and G, and fret 3 on B and high e.</p><p><b>2.</b> Use your middle finger for fret 2 and your ring finger for fret 3.</p><p><b>3.</b> Start on the low E and go up to the high e, then come back down.</p><p><b>4.</b> Use alternate picking (down, up) and the metronome at 60 BPM, one note per click. Make every note ring clearly.</p></div>`;
 h+=`<h2>Once it feels easy</h2><div class='card'><p>Play it backward, starting from the high e.</p><p>Play only the first three notes on each string, then try other small groups.</p><p>Make a mini riff: E, G, A, then back down G, E. Repeat it with a strumming rhythm.</p></div>`;
 h+=`<h2>Metronome</h2>`+met();
@@ -376,7 +349,6 @@ var mq=window.matchMedia(`(prefers-color-scheme: dark)`);
 function isDark(){return mode===`dark`||(mode===`system`&&mq.matches)}
 function applyAcc(){var a=ACC[acc],d=isDark(),r=document.documentElement;r.setAttribute(`data-mode`,d?`dark`:`light`);r.style.setProperty(`--ac`,d?a.d:a.l);r.style.setProperty(`--on`,d?`#0e0e10`:`#fff`)}
 function swHTML(){var ms=[[`system`,`Auto`],[`light`,`Light`],[`dark`,`Dark`]];return `<div class='md'>`+ms.map(function(m){return `<button data-m='${m[0]}' aria-pressed='${mode===m[0]}'>${m[1]}</button>`}).join(``)+`</div><div class='sw'>`+ACC.map(function(a,i){return `<button data-a='${i}' aria-label='${a.n} accent color' aria-pressed='${i===acc}' style='background:${isDark()?a.d:a.l}'></button>`}).join(``)+`</div>`}
-function menu(o){var n=$(`#nav`),b=$(`#mbtn`);if(o===undefined)o=!n.classList.contains(`open`);n.classList.toggle(`open`,o);b.classList.toggle(`open`,o);b.setAttribute(`aria-expanded`,o?`true`:`false`)}
 try{mq.addEventListener(`change`,function(){applyAcc();render()})}catch(e){}
 applyAcc();
 var TS=[{n:`E`,o:2,f:82.41,s:`6th`},{n:`A`,o:2,f:110,s:`5th`},{n:`D`,o:3,f:146.83,s:`4th`},{n:`G`,o:3,f:196,s:`3rd`},{n:`B`,o:3,f:246.94,s:`2nd`},{n:`e`,o:4,f:329.63,s:`1st`}];
@@ -469,44 +441,329 @@ $(`#ps-simp`).onclick=function(){pa.simp=!pa.simp;ss(`gp_simp`,pa.simp?`1`:`0`);
 $(`#ps-sp`).oninput=function(){pa.sp=+this.value};
 $(`#ps-go`).onclick=function(){pscroll(!pa.run)};
 pupd()}
-var VIEWS={today:["Today",today_],warm:["Warm-up",warm_],tuner:["Tuner",tuner_],chords:["Chords",chords_],strum:["Strum",strum_],scale:["Scale",scale_],songs:["Songs",songs_],play:["Play along",play_],nums:["Numbers",nash_],plan:["Plan",plan_],learn:["Learn",learn_]};
-function render(){Object.keys(ANIM).forEach(anStop);pscroll(false);clearInterval(pa.yti);if(tuner.on)tunerStop();
-$("#nav").innerHTML=Object.keys(VIEWS).map(function(k){return '<button aria-current="'+(k===tab?"page":"false")+'" data-t="'+k+'">'+VIEWS[k][0]+'</button>'}).join("")+swHTML();
-$("#app").innerHTML=VIEWS[tab][1]();
-document.querySelectorAll("details[data-an][open]").forEach(anOpen);
-if($("#ps-in"))paInit();
-if($("#br")){var r=$("#br");r.oninput=function(){setBpm(r.value)};$("#mb").onclick=toggleMet;if(tmr){$("#mb").textContent="Stop";$("#mb").setAttribute("aria-pressed","true")}
-if($("#dn"))$("#dn").onclick=function(){if(days.indexOf(today())<0){days.push(today());ss("gp_days",JSON.stringify(days))}render()}}
-}
-document.addEventListener("click",function(e){
-if(e.target.closest("#mbtn")){menu();return}
-var ac=e.target.closest("[data-a]");if(ac){acc=parseInt(ac.getAttribute("data-a"),10);ss("gp_acc",acc);applyAcc();render();return}
-var md=e.target.closest("[data-m]");if(md){mode=md.getAttribute("data-m");ss("gp_mode",mode);applyAcc();render();return}
-var qa=e.target.closest("[data-q]");if(qa){if(Q.pick===null){Q.pick=parseInt(qa.getAttribute("data-q"),10);qn++;if(Q.o[Q.pick]===Q.ans)qc++}$("#qz").innerHTML=quizHTML();return}
-if(e.target.closest("[data-nq]")){newQ();$("#qz").innerHTML=quizHTML();return}
-var kk=e.target.closest("[data-k]");if(kk){nk=kk.getAttribute("data-k");render();return}
-if(!e.target.closest("#nav"))menu(false);
-var t=e.target.closest("[data-t]");if(t){metStop();tab=t.getAttribute("data-t");menu(false);render();window.scrollTo(0,0);return}
-var hd=e.target.closest("[data-h]");if(hd){lefty=hd.getAttribute("data-h")==="l";ss("gp_left",lefty?"1":"0");render();return}
-if(e.target.closest("#bk-ex")){var tx=bkData(),m=$("#bk-msg"),fb=function(){$("#bk-in").value=tx;$("#bk-in").select();m.textContent="Copy the text in the box below."};try{navigator.clipboard.writeText(tx).then(function(){m.textContent="Copied. Paste it somewhere safe, like a note."},fb)}catch(er){fb()}return}
-if(e.target.closest("#bk-im")){var r=bkImport($("#bk-in").value.trim()),m2=$("#bk-msg");if(m2)m2.textContent=r;return}
-var tb=e.target.closest("[data-tn]");if(tb){if(tuner.on)tunerStop();else tunerStart();return}
-var ts=e.target.closest("[data-ts]");if(ts){var ti=parseInt(ts.getAttribute("data-ts"),10);tuner.tgt=ti;document.querySelectorAll("#tn-seg button").forEach(function(b){b.setAttribute("aria-pressed",String(b===ts))});if(ti>=0&&!tuner.on)tnTone(ti);return}
-var ap=e.target.closest("[data-ap]");if(ap){var aid=ap.getAttribute("data-ap"),ast=ANIM[aid];if(ast&&ast.t){anStop(aid);ast.paused=true}else{if(ast)ast.paused=false;anStart(aid)}return}
-var dd=e.target.closest("[data-d]");if(dd){dayI=parseInt(dd.getAttribute("data-d"),10);render();return}
-var w=e.target.closest("[data-w]");if(w){week=parseInt(w.getAttribute("data-w"),10);ss("gp_week",week);render()}});
-document.addEventListener("change",function(e){var s=e.target.getAttribute("data-s");if(s===null)return;s=ck(parseInt(s,10));
-var i=chk.indexOf(s);if(e.target.checked&&i<0)chk.push(s);if(!e.target.checked&&i>-1)chk.splice(i,1);saveChk()});
-document.addEventListener("toggle",function(e){var d=e.target,id;if(!d||d.tagName!=="DETAILS")return;id=d.getAttribute("data-an");if(!id)return;if(d.open)anOpen(d);else anStop(id)},true);
+// ---- Curriculum: data, not code. Add a row to add a skill. ----
+var AREAS={ch:`Chords`,rh:`Strumming and rhythm`,pk:`Picking`,fs:`Fingerstyle`,ld:`Scales and lead`,th:`Music basics`,ear:`Ear and care`};
+var LV=[``,`Foundations`,`Building`,`Expanding`];
+var STG=[`Not started`,`Learning`,`Shaky`,`Solid`,`Mastered`];
+var STY=[[`pop`,`Pop`],[`rock`,`Rock`],[`folk`,`Folk`],[`indie`,`Indie`],[`country`,`Country`],[`blues`,`Blues`],[`finger`,`Fingerstyle`]];
+var LVQ=[[`Brand new`,`Never played, or just a few tries`],[`A little`,`I know a few open chords`],[`A while`,`I’ve played on and off for a while`]];
+// [id, area, level, name, kind, extra, needs, how, styles]
+// kinds: ch chord (extra = chord), cg one-minute changes (extra = [a,b]), st strum pattern ([PT index, bpm]), tm with metronome (bpm), sc scale (bpm), tk task
+var SKL=[
+[`c_em`,`ch`,1,`Em chord`,`ch`,`Em`,[]],
+[`c_am`,`ch`,1,`Am chord`,`ch`,`Am`,[]],
+[`c_d`,`ch`,1,`D chord`,`ch`,`D`,[]],
+[`c_g`,`ch`,1,`G chord`,`ch`,`G`,[]],
+[`c_e`,`ch`,1,`E chord`,`ch`,`E`,[`c_em`]],
+[`c_a`,`ch`,1,`A chord`,`ch`,`A`,[`c_am`]],
+[`c_c`,`ch`,1,`C chord`,`ch`,`C`,[`c_am`]],
+[`c_dm`,`ch`,1,`Dm chord`,`ch`,`Dm`,[`c_d`]],
+[`x_em_am`,`ch`,1,`Em ↔ Am changes`,`cg`,[`Em`,`Am`]],
+[`x_em_d`,`ch`,1,`Em ↔ D changes`,`cg`,[`Em`,`D`]],
+[`x_g_em`,`ch`,1,`G ↔ Em changes`,`cg`,[`G`,`Em`]],
+[`x_em_c`,`ch`,1,`Em ↔ C changes`,`cg`,[`Em`,`C`]],
+[`x_c_am`,`ch`,1,`C ↔ Am changes`,`cg`,[`C`,`Am`]],
+[`x_g_c`,`ch`,1,`G ↔ C changes`,`cg`,[`G`,`C`]],
+[`x_c_d`,`ch`,1,`C ↔ D changes`,`cg`,[`C`,`D`]],
+[`x_d_g`,`ch`,1,`D ↔ G changes`,`cg`,[`D`,`G`]],
+[`x_a_d`,`ch`,1,`A ↔ D changes`,`cg`,[`A`,`D`]],
+[`x_e_a`,`ch`,1,`E ↔ A changes`,`cg`,[`E`,`A`]],
+[`x_d_am`,`ch`,1,`D ↔ Am changes`,`cg`,[`D`,`Am`]],
+[`x_am_g`,`ch`,1,`Am ↔ G changes`,`cg`,[`Am`,`G`]],
+[`r_count`,`rh`,1,`Counting the beat`,`tm`,60,[],`Count “1 & 2 & 3 & 4 &” out loud with the metronome and tap your foot on the numbers. Then strum one muted down on every number.`],
+[`r_p0`,`rh`,1,`Downs only`,`st`,[0,60],[`r_count`]],
+[`r_p1`,`rh`,1,`Steady down-up`,`st`,[1,60],[`r_p0`]],
+[`r_thru`,`rh`,1,`Strum through changes`,`tm`,60,[`r_p1`],`Strum down-up on one chord and switch to another on beat 1 without stopping your strumming hand. If the new chord isn’t ready, strum the open strings.`],
+[`r_p2`,`rh`,1,`The folk pattern`,`st`,[2,70],[`r_p1`]],
+[`p_hold`,`pk`,1,`Holding the pick`,`tk`,0,[],`Pinch the pick between your thumb and the side of your index finger, with a fingertip’s width sticking out. Strum a few chords and check it doesn’t slip or spin.`],
+[`p_open`,`pk`,1,`Picking open strings`,`tm`,60,[`p_hold`],`Pick each open string, thickest to thinnest and back, one note per click. Small movements, loose wrist.`],
+[`p_alt`,`pk`,1,`Alternate picking`,`tm`,70,[`p_open`],`Down, up, down, up on one string, two notes per click. Then move to the next string without breaking the down-up order.`],
+[`t_strings`,`th`,1,`String names`,`tk`,0,[],`Say E A D G B e while plucking each string, thickest to thinnest. Then pick a string without looking and name it.`],
+[`t_fingers`,`th`,1,`Finger numbers and frets`,`tk`,0,[],`Fingers are numbered 1 (index) to 4 (pinky). Fret 1 is the one nearest the headstock. Press just behind the fret, not on top of it. Say where each finger goes as you form G.`],
+[`e_tune`,`ear`,1,`Tuning up`,`tk`,0,[],`Open Tools, then Tuner. Tune from the low E to the high e, always tightening up to the note. Check again after a minute, because strings drift.`],
+[`e_post`,`ear`,1,`Posture and relaxed hands`,`tk`,0,[],`Sit up straight with the guitar body on your leg and the neck angled up a little, thumb behind the neck. Every few minutes, shake out your hands and drop your shoulders.`],
+[`c_a7`,`ch`,2,`A7 chord`,`ch`,`A7`,[`c_a`]],
+[`c_d7`,`ch`,2,`D7 chord`,`ch`,`D7`,[`c_d`]],
+[`c_e7`,`ch`,2,`E7 chord`,`ch`,`E7`,[`c_e`]],
+[`c_g7`,`ch`,2,`G7 chord`,`ch`,`G7`,[`c_g`]],
+[`c_asus2`,`ch`,2,`Asus2 chord`,`ch`,`Asus2`,[`c_a`]],
+[`c_cmaj7`,`ch`,2,`Cmaj7 chord`,`ch`,`Cmaj7`,[`c_c`]],
+[`c_fmaj7`,`ch`,2,`Fmaj7 (easy F)`,`ch`,`Fmaj7`,[`c_c`]],
+[`c_feasy`,`ch`,2,`F with a small barre`,`ch`,`F easy`,[`c_fmaj7`]],
+[`c_em7`,`ch`,2,`Em7 chord`,`ch`,`Em7`,[`c_em`]],
+[`c_cadd9`,`ch`,2,`Cadd9 chord`,`ch`,`Cadd9`,[`c_c`]],
+[`c_dsus2`,`ch`,2,`Dsus2 chord`,`ch`,`Dsus2`,[`c_d`]],
+[`c_dsus4`,`ch`,2,`Dsus4 chord`,`ch`,`Dsus4`,[`c_d`]],
+[`c_b7`,`ch`,2,`B7 chord`,`ch`,`B7`,[`c_e7`]],
+[`c_e5`,`ch`,2,`Power chords E5 and A5`,`ch`,`E5`,[`c_em`],``,[`rock`]],
+[`x_c_fm7`,`ch`,2,`C ↔ Fmaj7 changes`,`cg`,[`C`,`Fmaj7`]],
+[`x_am_fm7`,`ch`,2,`Am ↔ Fmaj7 changes`,`cg`,[`Am`,`Fmaj7`]],
+[`x_fm7_g`,`ch`,2,`Fmaj7 ↔ G changes`,`cg`,[`Fmaj7`,`G`]],
+[`x_am_e`,`ch`,2,`Am ↔ E changes`,`cg`,[`Am`,`E`]],
+[`x_e7_a`,`ch`,2,`E7 ↔ A changes`,`cg`,[`E7`,`A`]],
+[`x_d7_g`,`ch`,2,`D7 ↔ G changes`,`cg`,[`D7`,`G`]],
+[`x_b7_e`,`ch`,2,`B7 ↔ E changes`,`cg`,[`B7`,`E`],0,``,[`blues`,`country`]],
+[`x_a7_d7`,`ch`,2,`A7 ↔ D7 changes`,`cg`,[`A7`,`D7`],0,``,[`blues`]],
+[`x_d_dsus4`,`ch`,2,`D ↔ Dsus4 changes`,`cg`,[`D`,`Dsus4`]],
+[`r_p3`,`rh`,2,`Campfire pattern`,`st`,[3,70],[`r_p2`]],
+[`r_p4`,`rh`,2,`Driving pattern`,`st`,[4,80],[`r_p2`],``,[`pop`,`rock`]],
+[`r_mute`,`rh`,2,`Muted strums (the chk)`,`tm`,70,[`r_p2`],`Relax your fretting fingers so they touch but don’t press the strings, and strum for a dull “chk”. Put one muted strum on beats 2 and 4 of the folk pattern.`,[`pop`,`indie`]],
+[`r_pm`,`rh`,2,`Palm muting`,`tm`,80,[`r_p1`],`Rest the edge of your strumming palm on the strings right by the bridge and chug steady down strums on the low strings. Lift the palm for the last bar to hear the difference.`,[`rock`]],
+[`r_90`,`rh`,2,`Folk pattern at 90 BPM`,`st`,[2,90],[`r_p2`]],
+[`r_34`,`rh`,2,`3/4 time`,`tm`,70,[`r_p1`],`Count 1 2 3 instead of 1 2 3 4. Strum down on 1 and down-up on 2 and 3. Lots of folk and country songs use it.`,[`folk`,`country`]],
+[`p_bass`,`pk`,2,`Bass note, then strum`,`tm`,70,[`p_alt`,`c_g`],`Pick the lowest note of the chord on beat 1, then strum on 2, 3 and 4. For G pick the low E string, for C the A string, for D the D string.`,[`country`,`folk`]],
+[`p_boom`,`pk`,2,`Boom-chuck`,`tm`,80,[`p_bass`],`Bass note on 1, strum on 2, a different bass note on 3, strum on 4. Try G: low E string, strum, D string, strum.`,[`country`,`folk`]],
+[`p_arp`,`pk`,2,`Arpeggios`,`tm`,60,[`p_alt`],`Hold C and pick one string at a time from the bass up, one note per click, letting every note ring. Then try G and Am.`,[`indie`,`finger`]],
+[`f_pima`,`fs`,2,`Finger names: p i m a`,`tk`,0,[],`Thumb (p) plays the three bass strings, index (i) the G, middle (m) the B, ring (a) the high e. Rest your fingers on their strings and pluck each in turn.`,[`finger`,`folk`]],
+[`f_thumb`,`fs`,2,`Steady thumb`,`tm`,60,[`f_pima`],`Hold Em and pluck the low E with your thumb on every click. Keep it even and relaxed while your fingers rest on their strings.`,[`finger`]],
+[`f_pat`,`fs`,2,`Pattern p i m a`,`tm`,60,[`f_thumb`],`Hold Am. Thumb on the A string, then index, middle, ring, one per click. Then try C, G and Em, moving the thumb to each chord’s bass note.`,[`finger`,`folk`]],
+[`f_pinch`,`fs`,2,`The pinch`,`tm`,60,[`f_pat`],`Pluck with your thumb and ring finger at the same time, then index, then middle. A pinch on beat 1 makes a pattern sound fuller.`,[`finger`]],
+[`l_pent`,`ld`,2,`E minor pentatonic`,`sc`,60,[`p_alt`],`Open position, up and back down, one note per click. Middle finger on fret 2, ring finger on fret 3.`,[`rock`,`blues`]],
+[`l_back`,`ld`,2,`Pentatonic backward and in threes`,`tm`,70,[`l_pent`],`Start from the high e and come down. Then play groups of three notes: up three, back two, up three.`,[`rock`,`blues`]],
+[`l_ham`,`ld`,2,`Hammer-ons`,`tm`,60,[`l_pent`],`Pick the open G string, then bring finger 2 down hard on fret 2 without picking again. Do it on each string of the pentatonic.`,[`rock`,`blues`,`finger`]],
+[`l_pull`,`ld`,2,`Pull-offs`,`tm`,60,[`l_ham`],`Fret 2 on the G string, pick it, then flick that finger down off the string so the open note sounds. Then try fret 3 to open.`,[`rock`,`blues`,`finger`]],
+[`l_riff`,`ld`,2,`Make your first riff`,`tm`,70,[`l_pent`],`Make a short riff from the pentatonic, for example E, G, A, G on the low strings, and repeat it in time. Change one note at a time until you like it, then record it in Tools.`,[`rock`,`blues`,`indie`]],
+[`t_nash`,`th`,2,`Nashville numbers`,`tk`,0,[`t_strings`],`Chords as numbers in a key: 1, 4 and 5 are major, 2m, 3m and 6m are minor. The Numbers page in Learn has a quiz.`],
+[`t_keyg`,`th`,2,`Chords in G and C`,`tk`,0,[`t_nash`],`Key of G: G Am Bm C D Em. Key of C: C Dm Em F G Am. Most songs in G use G, C, D and Em (1, 4, 5, 6m). Play each set in order.`],
+[`t_minor`,`th`,2,`Major vs minor shapes`,`tk`,0,[`c_e`,`c_a`],`A minor chord is the major chord with one note lowered by a fret. Play E then Em, A then Am, D then Dm, and notice which finger moves.`],
+[`t_capo`,`th`,2,`Using a capo`,`tk`,0,[`c_g`],`Clamp the capo just behind a fret. Your shapes stay the same and everything sounds higher. The song sheet in Tools, Play along suggests capo spots.`],
+[`e_majmin`,`ear`,2,`Hear major vs minor`,`tk`,0,[`t_minor`],`Without looking, strum E or Em, A or Am (shuffle them, or ask a friend). Say whether it sounds bright (major) or dark (minor).`],
+[`e_chg`,`ear`,2,`Hear the chord change`,`tk`,0,[],`Put on a song you like and say “change” every time the chord changes. Most changes land on beat 1.`],
+[`e_str`,`ear`,2,`Changing strings`,`tk`,0,[`e_tune`],`Every 2 to 3 months, or when strings sound dull. Change one at a time, stretch the new string gently, and retune a few times.`],
+[`c_f`,`ch`,3,`F barre chord`,`ch`,`F`,[`c_feasy`]],
+[`c_bm`,`ch`,3,`Bm chord`,`ch`,`Bm`,[`c_feasy`]],
+[`c_pow`,`ch`,3,`Moving power chords`,`tk`,0,[`c_e5`,`t_notes`],`The two-finger shape slides anywhere. Root on the low E string: fret 3 is G5, fret 5 is A5, fret 7 is B5. Play G5, A5, B5, A5 with palm muting.`,[`rock`]],
+[`c_ebar`,`ch`,3,`E-shape barre anywhere`,`tk`,0,[`c_f`,`t_notes`],`Slide the full F shape up the neck. The fret of your index finger on the low E string names the chord: fret 3 is G, fret 5 is A.`],
+[`c_abar`,`ch`,3,`A-shape barre`,`tk`,0,[`c_bm`],`Barre the A string and up with your index finger and play the A shape above it. Fret 2 is B, fret 3 is C, fret 5 is D. Bm is the minor version.`],
+[`x_c_f`,`ch`,3,`C ↔ F changes`,`cg`,[`C`,`F`]],
+[`x_f_g`,`ch`,3,`F ↔ G changes`,`cg`,[`F`,`G`]],
+[`x_bm_g`,`ch`,3,`Bm ↔ G changes`,`cg`,[`Bm`,`G`]],
+[`x_d_bm`,`ch`,3,`D ↔ Bm changes`,`cg`,[`D`,`Bm`]],
+[`r_16`,`rh`,3,`Sixteenth-note strumming`,`tm`,70,[`r_p4`],`Count “1 e & a”. Your hand moves twice as fast: down on 1 and &, up on e and a. Accent the numbers.`,[`pop`,`rock`]],
+[`r_shuf`,`rh`,3,`Shuffle feel`,`tm`,80,[`r_p2`],`Long-short, long-short, like “hum-pty dum-pty”. Try it on palm-muted E and A.`,[`blues`,`rock`,`country`]],
+[`r_dyn`,`rh`,3,`Dynamics`,`tm`,80,[`r_p2`],`Play the folk pattern quietly for four bars, then loud for four. Quiet verses and big choruses make songs come alive.`,[`pop`,`indie`]],
+[`r_120`,`rh`,3,`Folk pattern at 120 BPM`,`st`,[2,120],[`r_90`]],
+[`p_skip`,`pk`,3,`String skipping`,`tm`,70,[`p_arp`],`Pick the low E, then G, then A, then B, then D, then high e, skipping a string each time while keeping alternate picking. Slow and clean.`],
+[`p_hyb`,`pk`,3,`Hybrid picking`,`tm`,60,[`p_boom`],`Bass note with the pick, then pluck the B and high e strings together with your middle and ring fingers.`,[`country`]],
+[`f_travis`,`fs`,3,`Travis picking`,`tm`,60,[`f_pinch`],`Your thumb alternates between two bass strings on every beat while your fingers add notes in between. On C: thumb A, D, A, D, with your index on the G string in between.`,[`finger`,`folk`]],
+[`f_mel`,`fs`,3,`Melody over a bass`,`tk`,0,[`f_travis`],`Keep the thumb steady on the bass and pick out a simple tune on the top strings, like the first line of a song you know.`,[`finger`]],
+[`l_am`,`ld`,3,`A minor pentatonic at fret 5`,`tm`,70,[`l_back`],`The same shape as open E minor, moved up: index on fret 5, pinky on fret 8, on every string. One note per click, up and back.`,[`rock`,`blues`]],
+[`l_bend`,`ld`,3,`String bends`,`tm`,60,[`l_am`],`Ring finger on fret 7 of the G string, with your other fingers behind it to help. Push the string up until it sounds like fret 9.`,[`rock`,`blues`]],
+[`l_slide`,`ld`,3,`Slides`,`tm`,60,[`l_am`],`Pick fret 5 and slide to fret 7 without lifting, keeping the pressure on so the note keeps ringing.`,[`rock`,`blues`,`indie`]],
+[`l_vib`,`ld`,3,`Vibrato`,`tk`,0,[`l_bend`],`Hold a note and wiggle it with small, even bends. Slow and wide first, then faster.`,[`rock`,`blues`]],
+[`l_lick`,`ld`,3,`First blues lick`,`tm`,70,[`l_bend`],`In A minor pentatonic: bend fret 7 on the G string, then play fret 5 on the B string, then fret 5 on the high e. Repeat it until it sings.`,[`blues`,`rock`]],
+[`l_imp`,`ld`,3,`Improvise over a loop`,`tk`,0,[`l_lick`],`Record yourself strumming Am and G (Tools, then Record), play it back, and make up lines in A minor pentatonic over it.`,[`rock`,`blues`,`indie`]],
+[`t_notes`,`th`,3,`Notes on the low strings`,`tk`,0,[`t_strings`],`Low E string: fret 1 is F, 3 is G, 5 is A, 7 is B, 8 is C, 10 is D, 12 is E. A string: fret 2 is B, 3 is C, 5 is D, 7 is E. You need these for barre and power chords.`],
+[`t_12`,`th`,3,`12-bar blues`,`tm`,80,[`t_nash`],`Four bars of 1, two of 4, two of 1, then 5, 4, 1, 5. In A: A A A A, D D A A, E D A E. Play it with A7, D7 and E7.`,[`blues`,`rock`]],
+[`t_trans`,`th`,3,`Transposing`,`tk`,0,[`t_nash`],`Write a song’s chords as numbers, then rebuild it in another key. Check yourself with the transpose buttons in Tools, Play along.`],
+[`t_circ`,`th`,3,`Circle of fifths basics`,`tk`,0,[`t_keyg`],`C, G, D, A, E: each key adds one sharp, and neighbours share most of their chords. That is why G, C and D sound good together.`],
+[`e_key`,`ear`,3,`Find a song’s key`,`tk`,0,[`e_chg`,`t_nash`],`Listen for the chord the song feels like it rests on, often the first and last chord. That is the 1.`],
+[`e_ear`,`ear`,3,`Work out a song by ear`,`tk`,0,[`e_key`],`Pick a song with three or four chords. Find each chord’s bass note on the low strings, then try the major and minor chord on that note.`]
+];
+var SKI={},CHS={},PTS={},PAIR={};
+SKL.forEach(function(r,i){var k={id:r[0],a:r[1],l:r[2],n:r[3],k:r[4],x:r[5],q:r[6]||[],h:r[7]||``,g:r[8]||[],i:i};SKI[k.id]=k;if(k.k===`ch`)CHS[k.x]=k.id;if(k.k===`st`&&PTS[k.x[0]]===undefined)PTS[k.x[0]]=k.id;if(k.k===`cg`)PAIR[k.x.slice().sort().join(`|`)]=k.id});
+SKL.forEach(function(r){var k=SKI[r[0]];if(k.k===`cg`)k.q=k.x.map(function(c){return CHS[c]})});
+var CGT=30,IV=[1,3,7,14,30];
+var WU=[[`spider`,`Spider walk`],[`press`,`One finger at a time`],[`chord`,`Silent chord shapes`],[`pick`,`Picking open strings`],[`hand`,`Hand stretches`]];
+var IC={ch:`🎸`,rh:`🥁`,pk:`🎯`,fs:`🖐️`,ld:`⚡`,th:`🧠`,ear:`👂`,wu:`🔥`,song:`🎵`,rv:`🔁`};
+var BG={ch:`rgba(110,168,255,.18)`,rh:`rgba(250,204,21,.18)`,pk:`rgba(244,114,182,.18)`,fs:`rgba(167,139,250,.18)`,ld:`rgba(251,146,60,.18)`,th:`rgba(45,212,191,.18)`,ear:`rgba(163,230,53,.18)`,wu:`rgba(248,113,113,.18)`,song:`rgba(74,222,128,.18)`,rv:`rgba(167,139,250,.18)`};
+var PENT=[[0,0],[0,3,3],[1,0],[1,2,2],[2,0],[2,2,2],[3,0],[3,2,2],[4,0],[4,3,3],[5,0],[5,3,3]];
+function cleanProf(p){if(!p||typeof p!==`object`)return null;return{name:String(p.name||``).slice(0,30),lv:[0,1,2].indexOf(p.lv)>-1?p.lv:0,sty:(Array.isArray(p.sty)?p.sty:[]).filter(function(s){return STY.some(function(x){return x[0]===s})}),goal:String(p.goal||``)}}
+var prof=null;try{prof=cleanProf(JSON.parse(sg(`gp_prof`)||`null`))}catch(e){prof=null}
+var SK={};try{SK=JSON.parse(sg(`gp_sk`)||`{}`)||{}}catch(e){SK={}}
+var mins=parseInt(sg(`gp_min`)||`10`,10);if([10,20,30].indexOf(mins)<0)mins=10;
+function saveSK(){ss(`gp_sk`,JSON.stringify(SK))}
+function saveProf(){ss(`gp_prof`,JSON.stringify(prof))}
+function dn(){var d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)}
+function st(id){return SK[id]?SK[id].st||0:0}
+function ens(id){return SK[id]||(SK[id]={st:0,h:0,r:0,iv:0,due:0})}
+function mmss(s){return Math.floor(s/60)+`:`+String(s%60).padStart(2,`0`)}
+// Smooth on two different days: learning or shaky -> solid. Solid comes back after 1, 3, 7, 14, 30 days; smooth at 30 -> mastered. Two Roughs in a row drop a level.
+function grade(id,r){var s=ens(id),t=dn(),old=s.st;if(!s.st)s.st=1;
+if(r===2){s.r=0;if(s.st>=3){s.iv=Math.min((s.iv||0)+1,4);s.due=t+IV[s.iv];if(s.iv===4)s.st=4}else if(s.hd!==t){s.h=(s.h||0)+1;s.hd=t;if(s.h>=2){s.st=3;s.h=0;s.iv=0;s.due=t+IV[0]}}}
+else if(r===1){s.r=0;if(s.st>=3)s.due=t+1}
+else{s.r=(s.r||0)+1;if(s.r>=2){s.st=s.st>=3?2:1;s.h=0;s.r=0}if(s.st>=3)s.due=t+1}
+saveSK();return[old,s.st]}
+function open(id){var k=SKI[id];return k.q.every(function(q){return st(q)>=(k.k===`cg`?1:3)})}
+function level(){for(var l=1;l<3;l++)if(SKL.some(function(r){return r[2]===l&&st(r[0])<3}))return l;return 3}
+function goalSong(){var g=prof&&prof.goal;return SONGS.filter(function(s){return s.n===g})[0]||null}
+function songSkills(s){var o=[];function add(i){if(i&&o.indexOf(i)<0)o.push(i)}s.c.forEach(function(c){add(CHS[c])});s.s.forEach(function(r){r[1].forEach(function(c,i){var nx=r[1][(i+1)%r[1].length];if(nx!==c)add(PAIR[[c,nx].sort().join(`|`)])})});add(PTS[s.pats[0][1]]);return o}
+function songProg(s){var k=songSkills(s);return k.length?Math.round(100*k.filter(function(i){return st(i)>=3}).length/k.length):0}
+function ready(s){return s.c.filter(function(c){return CHS[c]&&st(CHS[c])>=1}).length/s.c.length}
+function chipName(k){return k.k===`ch`?k.x:k.k===`cg`?k.x.join(` ↔ `):k.n}
+function skSub(k){return k.k===`ch`?`Form it and check for buzz`:k.k===`cg`?`One-minute changes`:k.k===`st`?`${k.x[1]} BPM with the metronome`:k.k===`tm`||k.k===`sc`?`${k.x} BPM with the metronome`:AREAS[k.a]}
+function plan(m){
+var t=dn(),S=goalSong(),need=S?songSkills(S):[],all=SKL.map(function(r){return SKI[r[0]]}),used={};
+function score(k){var s=k.l*100+k.i/10;if(need.indexOf(k.id)>-1)s-=150;if(prof&&k.g.some(function(g){return prof.sty.indexOf(g)>-1}))s-=40;return s}
+function by(a,b){return score(a)-score(b)}
+function take(list,notArea){for(var i=0;i<list.length;i++){var k=list[i];if(!used[k.id]&&k.a!==notArea){used[k.id]=1;return k}}return null}
+var prog=all.filter(function(k){var s=st(k.id);return s===1||s===2}).sort(by),
+fresh=all.filter(function(k){return st(k.id)===0&&open(k.id)}).sort(by),
+due=all.filter(function(k){return st(k.id)>=3&&SK[k.id].due<=t}).sort(function(a,b){return SK[a.id].due-SK[b.id].due}),
+// at most 4 skills in progress, so new ones don't pile up
+pool=prog.concat(prog.length<4?fresh:[]),F=[],R=[],X=null,i;
+for(i=0;i<(m>=30?2:1);i++){var r=take(due);if(r)R.push(r)}
+var a=take(pool);if(a)F.push(a);
+if(m>=20||!R.length){var b=take(pool,a&&a.a)||take(pool);if(b)F.push(b)}
+if(m>=30)X=take(pool.filter(function(k){return k.a===`th`||k.a===`ear`}))||take(pool);
+var song=S&&ready(S)>=.5?S:SONGS.filter(function(s){return ready(s)===1}).sort(function(x,y){return songProg(y)-songProg(x)})[0]||null;
+function mk(k,w){var s=st(k.id),rv=s>=3;return{k:`sk`,id:k.id,n:k.n,w:w,tag:rv?`Review`:s?`Keep going`:`New`,ic:rv?IC.rv:IC[k.a],bg:rv?BG.rv:BG[k.a],sub:skSub(k)}}
+var items=F.map(function(k){return mk(k,2)}).concat(X?[mk(X,1)]:[]).concat(R.map(function(k){return mk(k,1)})),
+wu=m>=20?3:2,sm=song?(m>=30?7:m>=20?5:2):0,rem=m-wu-sm,tw=0,sum=wu+sm;
+items.forEach(function(x){tw+=x.w});items.forEach(function(x){x.m=Math.max(1,Math.round(rem*x.w/tw));sum+=x.m});
+if(items.length)items[0].m+=m-sum;else if(song)sm+=m-sum;else wu=m;
+var w=WU[t%WU.length],steps=[{k:`wu`,id:w[0],n:w[1],m:wu,ic:IC.wu,bg:BG.wu,sub:`Warm-up`}].concat(items);
+if(song)steps.push({k:`song`,id:song.n,n:song.n,m:sm,ic:IC.song,bg:BG.song,sub:`${song.s[0][0]}: ${song.s[0][1].join(` `)}, slowly`});
+var why=``;if(F[0])why=need.indexOf(F[0].id)>-1&&S?`${F[0].n} gets you closer to ${S.n}.`:`${F[0].n} is your next step in ${AREAS[F[0].a].toLowerCase()}.`;if(R[0])why+=` ${R[0].n} is due for review.`;
+return{steps:steps,why:why}}
+function place(lv){var t=dn(),ids=lv===1?[`c_em`,`c_am`,`c_d`,`c_g`,`c_c`,`c_e`,`c_a`,`x_em_am`,`x_g_c`,`x_d_g`,`r_count`,`r_p0`,`r_p1`,`p_hold`,`p_open`,`t_strings`,`t_fingers`,`e_tune`,`e_post`]:lv===2?SKL.filter(function(r){return r[2]===1}).map(function(r){return r[0]}).concat([`c_a7`,`c_d7`,`c_e7`,`c_g7`,`c_asus2`,`c_cmaj7`,`c_fmaj7`,`c_em7`,`r_p3`,`r_mute`,`p_arp`,`l_pent`,`t_capo`]):[];
+ids.forEach(function(id,i){if(st(id)<3)SK[id]={st:3,h:0,r:0,iv:0,due:t+1+i%7}});saveSK()}
+// ---- Screens ----
+var GEAR=`<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z'/></svg>`;
+function stepRow(s,i){return `<div class='stp' style='animation-delay:${i*40}ms'><span class='ic' style='background:${s.bg}' aria-hidden='true'>${s.ic}</span><div><b>${s.n}${s.tag?`<span class='tag'>${s.tag}</span>`:``}</b><small>${s.sub}</small></div><span class='m'>${s.m} min</span></div>`}
+function home_(){
+var P=plan(mins),S=goalSong(),d=new Date(),done=days.indexOf(today())>-1,h=``;
+h+=`<div class='hello'><div><p class='mu'>${FULL[d.getDay()]} · ${LV[level()]}</p><h1>Hey ${pesc(prof.name||`there`)} 👋</h1></div><button class='circ' data-t='set' aria-label='Settings'>${GEAR}</button></div>`;
+h+=`<div class='card hero'><div class='row sb'><span class='lab'>${done?`Practiced today ✓`:`Today’s session`}</span><div class='pill' role='group' aria-label='Time today'>${[10,20,30].map(function(m){return `<button data-min='${m}' aria-pressed='${m===mins}' aria-label='${m} minutes'>${m}${m===30?` min`:``}</button>`}).join(``)}</div></div><div class='steps'>${P.steps.map(stepRow).join(``)}</div><button class='big go' id='go'><svg width='18' height='18' viewBox='0 0 24 24' fill='currentColor' aria-hidden='true'><path d='M7 4.5v15l13-7.5z'/></svg>${done?`Practice again`:`Start practice`}</button>${P.why?`<p class='mu' style='margin-top:10px'>Picked for you: ${P.why}</p>`:``}</div>`;
+if(S){var ks=songSkills(S),pc=songProg(S);h+=`<div class='card hero'><span class='lab'>Working toward</span><div class='goal'><div class='ring'><svg viewBox='0 0 64 64' width='64' height='64' aria-hidden='true'><circle cx='32' cy='32' r='27' fill='none' stroke='var(--bd)' stroke-width='7'/><circle cx='32' cy='32' r='27' fill='none' stroke='var(--ac)' stroke-width='7' stroke-linecap='round' stroke-dasharray='169.6' stroke-dashoffset='${169.6*(1-pc/100)}' transform='rotate(-90 32 32)'/></svg><span>${pc}%</span></div><div><b>${S.n}</b><div class='chips'>${ks.map(function(id){return `<span class='chip s${st(id)}'>${chipName(SKI[id])}${st(id)>=3?` ✓`:``}</span>`}).join(``)}</div></div></div></div>`}
+else h+=`<div class='card hero'><span class='lab'>Working toward</span><p>Pick a goal song and your sessions will build toward it.</p><button class='btn go' data-t='songs'>Choose a song</button></div>`;
+var off=(d.getDay()+6)%7,dots=``,i,x,k;for(i=0;i<7;i++){x=new Date(d.getFullYear(),d.getMonth(),d.getDate()-off+i);k=x.getFullYear()+`-`+(x.getMonth()+1)+`-`+x.getDate();dots+=`<div class='dd'>${`MTWTFSS`[i]}<i class='${days.indexOf(k)>-1?`y`:i===off?`t`:``}'></i></div>`}
+h+=`<div class='row sb' style='margin-top:20px'><h2 style='margin:0'>This week</h2><span class='mu'>${streak()?`🔥 ${streak()}-day streak`:`Start your streak today`}</span></div><div class='days' aria-label='Days practiced this week'>${dots}</div>`;
+return h}
+var sess=null,oc={n:0,left:0,iv:null};
+function stepBpm(s){var k=s.k===`sk`?SKI[s.id]:null;bpm=k?(k.k===`st`?k.x[1]:k.k===`tm`||k.k===`sc`?k.x:bpm):s.k===`song`?60:bpm}
+function startSess(){var P=plan(mins);sess={steps:P.steps,i:0,res:[],left:P.steps[0].m*60,run:false,end:0,iv:null};stepBpm(sess.steps[0]);tab=`sess`;render();window.scrollTo(0,0)}
+function skHow(k){return k.k===`ch`?CTIP[k.x]||``:k.k===`cg`?`Switch between ${k.x[0]} and ${k.x[1]} for one minute and count every clean change. Aim for ${CGT}.`:k.k===`st`?PT[k.x[0]].d+` Strum it on any chord you know at ${k.x[1]} BPM.`:k.h}
+function ocBox(k){var b=SK[k.id]&&SK[k.id].b||0;return `<div class='card'><div class='row sb'><b>One-minute changes</b><span class='mu'>Best: ${b}</span></div><p class='mu'>Start the minute, switch back and forth, and count each clean change in your head. When it beeps, enter your count.</p><p><button class='btn go' id='oc-go'>Start 1 minute</button></p><div class='row'><input id='oc-n' class='inp' type='number' inputmode='numeric' min='0' max='200' aria-label='Clean changes' placeholder='Clean changes' style='margin:0'><button class='btn' id='oc-s'>Save</button></div><p class='mu' id='oc-m' role='status'></p></div>`}
+function stepBody(s){var h=``,k;
+if(s.k===`wu`)return `<div data-an='${s.id}'>${anBox(s.id)}</div><p class='mu'>Copy what you see, slowly and relaxed. The Warm-ups page in Learn explains each one.</p>`;
+if(s.k===`song`){var S=SONGS.filter(function(x){return x.n===s.id})[0],p=PT[S.pats[0][1]];return `<p class='mu'>${S.t}</p>`+S.s.map(function(r){return `<p><b>${r[0]}</b></p><div class='bars'>${r[1].map(function(c){return `<div class='bar'><b>${c}</b><span>1 2 3 4</span></div>`}).join(``)}</div>`}).join(``)+`<p><b>Strum:</b> ${p.n}</p>${patGrid(p.s)}<p class='mu'>Play it slowly and keep going through mistakes. Loop the hardest part.</p>`+met()}
+k=SKI[s.id];
+if(k.k===`ch`)h=`<div class='grid g1'>${chordCard(k.x)}</div><p>${CTIP[k.x]||``}</p><p class='mu'>Form it, pick each string to check for buzz, lift off and form it again.</p>`;
+else if(k.k===`cg`)h=`<div class='grid g2'>${k.x.map(chordCard).join(``)}</div><p>${skHow(k)}</p>`+ocBox(k);
+else if(k.k===`st`)h=patGrid(PT[k.x[0]].s)+`<p>${skHow(k)}</p>`+met();
+else if(k.k===`sc`)h=`<div style='max-width:160px;margin:0 auto'>${fb(PENT)}</div><p>${k.h}</p>`+met();
+else h=`<p>${k.h}</p>`+(k.k===`tm`?met():``);
+return h}
+function sess_(){var s=sess.steps[sess.i],n=sess.steps.length,last=sess.i===n-1,tot=s.m*60,h=``;
+h+=`<div class='sx'><button class='circ' id='sx-x' aria-label='End session'>×</button><span class='mu'>Step ${sess.i+1} of ${n}</span><span style='width:44px'></span></div>`;
+h+=`<div class='prog' aria-hidden='true'>${sess.steps.map(function(x,j){return `<i class='${j<sess.i?`d`:j===sess.i?`c`:``}'></i>`}).join(``)}</div>`;
+h+=`<p class='lab'>${s.tag||(s.k===`wu`?`Warm-up`:`Song`)}</p><h1>${s.n}</h1>`;
+h+=`<div class='tmr'><svg viewBox='0 0 120 120' aria-hidden='true'><circle cx='60' cy='60' r='54' class='tr-bg'/><circle id='rt-c' cx='60' cy='60' r='54' class='tr-fg' stroke-dasharray='339.3' stroke-dashoffset='${339.3*(1-sess.left/tot)}' transform='rotate(-90 60 60)'/></svg><button id='rt-b' aria-label='Start or pause the timer'><b id='rt-t'>${mmss(sess.left)}</b><span id='rt-s'></span></button></div>`;
+h+=stepBody(s);
+if(s.k===`sk`)h+=`<p class='lab'>How did it go?</p><div class='rate'><button data-rate='0'><span aria-hidden='true'>😣</span><b>Rough</b></button><button data-rate='1'><span aria-hidden='true'>🙂</span><b>Getting there</b></button><button data-rate='2'><span aria-hidden='true'>😎</span><b>Smooth</b></button></div>`;
+else h+=`<button class='big go' id='nx' style='margin-bottom:24px'>${last?`Finish`:`Next`}</button>`;
+return h}
+function drawT(){var s=sess&&sess.steps[sess.i],c=$(`#rt-c`);if(!s||!c)return;c.setAttribute(`stroke-dashoffset`,339.3*(1-sess.left/(s.m*60)));$(`#rt-t`).textContent=mmss(sess.left);$(`#rt-s`).textContent=sess.left===0?`Time’s up`:sess.run?`Pause`:`Start`}
+function beep(){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume();var t=ctx.currentTime;[0,.25,.5].forEach(function(d){clickAt(t+d,true)})}catch(e){}}
+function tick(){if(!sess||!sess.run)return;sess.left=Math.max(0,Math.ceil((sess.end-Date.now())/1000));if(sess.left===0){sess.run=false;clearInterval(sess.iv);beep()}drawT()}
+function tToggle(){if(!sess.left)return;clearInterval(sess.iv);sess.run=!sess.run;if(sess.run){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}sess.end=Date.now()+sess.left*1000;sess.iv=setInterval(tick,250)}drawT()}
+function ocStop(){clearInterval(oc.iv);oc.iv=null}
+function ocStart(){ocStop();oc.left=60;var b=$(`#oc-go`);b.textContent=`60s`;oc.iv=setInterval(function(){oc.left--;var b=$(`#oc-go`);if(!b){ocStop();return}if(oc.left<=0){ocStop();beep();b.textContent=`Again`;$(`#oc-m`).textContent=`Time! How many clean changes?`;$(`#oc-n`).focus();return}b.textContent=oc.left+`s`},1000)}
+function ocSave(){var s=sess.steps[sess.i],n=parseInt($(`#oc-n`).value,10),k;if(!(n>=0&&n<=200)){$(`#oc-m`).textContent=`Enter a number.`;return}k=ens(s.id);if(n>(k.b||0))k.b=n;saveSK();
+var r=n>=CGT?2:n>=Math.round(CGT*.6)?1:0;document.querySelectorAll(`[data-rate]`).forEach(function(x){x.classList.toggle(`sug`,+x.getAttribute(`data-rate`)===r)});
+$(`#oc-m`).textContent=`${n} clean changes. Suggested rating: ${[`Rough`,`Getting there`,`Smooth`][r]}.`}
+function nextStep(r){var s=sess.steps[sess.i];if(r!==undefined&&s.k===`sk`){var c=grade(s.id,r);sess.res.push({n:s.n,a:c[0],b:c[1],id:s.id})}
+clearInterval(sess.iv);ocStop();metStop();sess.i++;
+if(sess.i>=sess.steps.length){logDay();tab=`done`;render();window.scrollTo(0,0);return}
+var ns=sess.steps[sess.i];sess.left=ns.m*60;sess.run=false;stepBpm(ns);render();window.scrollTo(0,0)}
+function logDay(){if(days.indexOf(today())<0){days.push(today());ss(`gp_days`,JSON.stringify(days))}}
+function endSess(){clearInterval(sess.iv);ocStop();metStop();if(sess.res.length)logDay();sess=null;tab=`home`;render();window.scrollTo(0,0)}
+function done_(){var r=sess?sess.res:[],h=`<div class='done'><div class='ok'><svg width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg></div><h1>Session done</h1><p class='mu'>🔥 ${streak()}-day streak · ${days.length} day${days.length===1?``:`s`} practiced</p></div>`;
+if(r.length)h+=`<div class='card list'>${r.map(function(x){var k=SK[x.id]||{};return `<div class='rs'><b>${x.n}</b><span class='mu'>${x.a!==x.b&&x.a?`${STG[x.a]} → <b class='up'>${STG[x.b]}</b>`:x.b<3&&k.h?`${STG[x.b]} · 1 of 2 smooth days`:STG[x.b]}</span></div>`}).join(``)}</div><p class='mu'>Smooth on two different days moves a skill to Solid. Solid skills come back for review after 1, 3, 7, 14 and 30 days.</p>`;
+return h+`<button class='big go' data-t='home'>Back home</button>`}
+var su=null,openSk=null;
+function setup_(){if(!su)su=prof?JSON.parse(JSON.stringify(prof)):{name:``,lv:0,sty:[],goal:SONGS[0].n};
+var h=`<h1>${prof?`Your setup`:`Welcome 👋`}</h1><p class='mu'>A few questions so the app can build your practice. You can change these any time in Settings.</p>`;
+h+=`<p class='lab'><label for='su-n'>Your name</label></p><input id='su-n' class='inp' value='${pesc(su.name)}' maxlength='30' autocomplete='given-name'>`;
+h+=`<p class='lab'>How much have you played?</p><div class='seg col' role='group' aria-label='Experience'>${LVQ.map(function(q,i){return `<button data-lv='${i}' aria-pressed='${su.lv===i}'><b>${q[0]}</b><span class='mu'>${q[1]}</span></button>`}).join(``)}</div>`;
+h+=`<p class='lab'>Styles you like</p><div class='seg' role='group' aria-label='Styles'>${STY.map(function(s){return `<button data-sty='${s[0]}' aria-pressed='${su.sty.indexOf(s[0])>-1}'>${s[1]}</button>`}).join(``)}</div>`;
+h+=`<p class='lab'><label for='su-g'>Song to work toward</label></p><select id='su-g' class='inp'>${SONGS.map(function(s){return `<option${s.n===su.goal?` selected`:``}>${pesc(s.n)}</option>`}).join(``)}</select><p class='mu'>Not on the list? Pick the closest one for now. You can change it on the Songs tab.</p>`;
+return h+`<button class='big go' id='su-go' style='margin-bottom:24px'>${prof?`Save`:`Start practicing`}</button>`}
+function saveSetup(){var nm=$(`#su-n`).value.trim(),first=!prof,up=prof&&su.lv>prof.lv;if(!nm){$(`#su-n`).focus();return}su.name=nm;su.goal=$(`#su-g`).value;prof=cleanProf(su);saveProf();if(first||up)place(prof.lv);su=null;tab=`home`;render();window.scrollTo(0,0)}
+function learn_(){var sol=SKL.filter(function(r){return st(r[0])>=3}).length,h=`<h1>Learn</h1><p class='mu'>${sol} of ${SKL.length} skills solid. Your sessions are picked from these. Tap a skill to see how it works.</p>`;
+h+=`<div class='refs'>${[[`chords`,`🎸`,`Chord library`],[`strum`,`🥁`,`Strumming`],[`warm`,`🔥`,`Warm-ups`],[`scale`,`⚡`,`Scale`],[`nums`,`🔢`,`Numbers`],[`links`,`🔗`,`Where to learn`]].map(function(r){return `<button data-t='${r[0]}'><span aria-hidden='true'>${r[1]}</span>${r[2]}</button>`}).join(``)}</div>`;
+Object.keys(AREAS).forEach(function(a){var L=SKL.filter(function(r){return r[1]===a}),n=L.filter(function(r){return st(r[0])>=3}).length;
+h+=`<h2>${AREAS[a]} <span class='mu'>${n}/${L.length}</span></h2><div class='card list'>`+L.map(function(r){var k=SKI[r[0]],s=st(k.id),lk=!s&&!open(k.id);
+return `<details class='sk'${openSk===k.id?` open`:``}><summary><span class='dot s${s}' aria-hidden='true'></span><span class='nm'>${k.n}</span><span class='mu'>${lk?`🔒 `:``}${STG[s]}</span></summary><div><p class='mu'>${LV[k.l]}${k.q.length?` · after ${k.q.map(function(q){return SKI[q].n}).join(`, `)}`:``}</p>${k.k===`ch`?`<div class='grid g1'>${chordCard(k.x)}</div>`:``}<p>${skHow(k)}</p><div class='seg'>${s<3?`<button data-know='${k.id}'>I already know this</button>`:``}${s?`<button data-reset='${k.id}'>Start over</button>`:``}</div></div></details>`}).join(``)+`</div>`});
+return h}
+var tool=`tuner`;
+function met_(){return `<h1>Metronome</h1><p class='mu'>Start slow. Add 5 BPM after four clean bars in a row.</p>`+met()}
+var rec={mr:null,list:[],t0:0,iv:null};
+function rec_(){var h=`<h1>Record</h1><p class='mu'>Record a riff or a run-through and listen back. Recordings stay until you close the app, so save the ones you want to keep. Sharing with your group comes with accounts.</p>`;
+h+=`<div class='card' style='text-align:center'><button class='recb${rec.mr?` on`:``}' id='rc-b' aria-label='${rec.mr?`Stop recording`:`Start recording`}'><i></i></button><p id='rc-m' class='mu' role='status'>${rec.mr?`Recording…`:`Tap to record`}</p></div>`;
+return h+rec.list.slice().reverse().map(function(r){return `<div class='card'><b>${r.n}</b><audio controls src='${r.u}' style='width:100%;margin-top:8px'></audio><p><a href='${r.u}' download='${r.f}'>Save to device</a></p></div>`}).join(``)}
+async function recToggle(){if(rec.mr){rec.mr.stop();return}
+try{if(!window.MediaRecorder||!navigator.mediaDevices)throw new Error(`none`);var s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}),mr=new MediaRecorder(s),ch=[];
+mr.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
+mr.onstop=function(){s.getTracks().forEach(function(t){t.stop()});clearInterval(rec.iv);var b=new Blob(ch,{type:mr.mimeType||`audio/webm`}),n=rec.list.length+1;rec.list.push({n:`Take ${n} · ${mmss(Math.round((Date.now()-rec.t0)/1000))}`,u:URL.createObjectURL(b),f:`riff-${n}.${/mp4|aac/.test(b.type)?`m4a`:`webm`}`});rec.mr=null;if(tab===`tools`&&tool===`rec`)render()};
+mr.start();rec.mr=mr;rec.t0=Date.now();render();rec.iv=setInterval(function(){var m=$(`#rc-m`);if(m)m.textContent=`Recording… ${mmss(Math.round((Date.now()-rec.t0)/1000))}`},500)}
+catch(e){var m=$(`#rc-m`);if(m)m.textContent=e&&e.name===`NotAllowedError`?`Microphone permission was denied. Allow it in your browser or iPhone settings and try again.`:`Recording isn’t available here. Try the GitHub Pages version in Safari or Chrome.`}}
+function tools_(){return `<div class='pill wide' role='group' aria-label='Tool'>${[[`tuner`,`Tuner`],[`met`,`Metronome`],[`play`,`Play along`],[`rec`,`Record`]].map(function(t){return `<button data-tool='${t[0]}' aria-pressed='${t[0]===tool}'>${t[1]}</button>`}).join(``)}</div>`+{tuner:tuner_,met:met_,play:play_,rec:rec_}[tool]()}
+function set_(){return `<h1>Settings</h1><div class='card'><p><b>${pesc(prof.name)}</b></p><p class='mu'>${LVQ[prof.lv][0]} · ${prof.sty.map(function(s){return STY.filter(function(x){return x[0]===s})[0][1]}).join(`, `)||`No styles picked`} · Goal: ${pesc(prof.goal)}</p><p><button class='btn' data-t='setup'>Change setup</button></p></div><h2>Handedness</h2>${hand()}<h2>Look</h2><div class='card'>${swHTML()}</div>`+bkHTML()}
+function bkData(){return JSON.stringify({app:`guitar-practice`,v:2,prof:prof,sk:SK,days:days,lefty:lefty,mode:mode,acc:acc,mins:mins})}
+function mergeIn(d){if(Array.isArray(d.days))d.days.forEach(function(x){if(typeof x===`string`&&/^\d{4}-\d{1,2}-\d{1,2}$/.test(x)&&days.indexOf(x)<0)days.push(x)});
+if(!prof&&d.prof)prof=cleanProf(d.prof);
+if(d.sk&&typeof d.sk===`object`)Object.keys(d.sk).forEach(function(k){var v=d.sk[k];if(SKI[k]&&v&&typeof v.st===`number`&&v.st>=0&&v.st<=4&&(!SK[k]||v.st>(SK[k].st||0)))SK[k]=v});
+if(typeof d.lefty===`boolean`)lefty=d.lefty;
+ss(`gp_days`,JSON.stringify(days));if(prof)saveProf();saveSK();ss(`gp_left`,lefty?`1`:`0`)}
+function bkImport(txt){var d;try{d=JSON.parse(txt)}catch(e){return `That doesn’t look like exported progress.`}
+if(!d||d.app!==`guitar-practice`||!Array.isArray(d.days))return `That doesn’t look like exported progress.`;mergeIn(d);render();return `Imported. You now have ${days.length} practice days.`}
+function bkHTML(){return `<h2>Back up your progress</h2><div class='card'><p class='mu'>Your setup, skills and streak are saved on this device. Copy them to move to another device or keep a backup.</p><p><button class='btn go' id='bk-ex'>Copy my progress</button></p><p><b>Restore</b></p><textarea id='bk-in' rows='3' style='width:100%;font:14px var(--f);padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)' placeholder='Paste copied progress here'></textarea><p><button class='btn' id='bk-im'>Restore progress</button></p><p id='bk-msg' role='status' class='mu'></p></div>`}
+// ---- Shell ----
+var TB=`<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'>`;
+var TABS=[[`home`,`Practice`,TB+`<circle cx='12' cy='12' r='9'/><path d='M10 8.5l6 3.5-6 3.5z'/></svg>`],[`learn`,`Learn`,TB+`<path d='M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z'/><path d='M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z'/></svg>`],[`songs`,`Songs`,TB+`<path d='M9 18V5l11-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='17' cy='16' r='3'/></svg>`],[`tools`,`Tools`,TB+`<path d='M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6'/></svg>`]];
+var VIEWS={home:home_,sess:sess_,done:done_,setup:setup_,set:set_,learn:learn_,chords:chords_,strum:strum_,warm:warm_,scale:scale_,nums:nash_,links:links_,songs:songs_,tools:tools_};
+var PARENT={chords:`learn`,strum:`learn`,warm:`learn`,scale:`learn`,nums:`learn`,links:`learn`,set:`home`,setup:`set`},PNAME={learn:`Learn`,home:`Practice`,set:`Settings`};
+var lastTab=null;
+function render(){Object.keys(ANIM).forEach(anStop);pscroll(false);clearInterval(pa.yti);if(tuner.on)tunerStop();if(rec.mr&&!(tab===`tools`&&tool===`rec`))rec.mr.stop();
+if(!prof)tab=`setup`;if((tab===`sess`||tab===`done`)&&!sess)tab=`home`;
+var top=tab===`setup`||tab===`set`||tab===`sess`||tab===`done`?`home`:PARENT[tab]||tab;
+document.body.classList.toggle(`full`,tab===`sess`||!prof);
+$(`#tabs`).innerHTML=TABS.map(function(t){return `<button data-t='${t[0]}' aria-current='${t[0]===top?`page`:`false`}'>${t[2]}${t[1]}</button>`}).join(``);
+var app=$(`#app`);app.innerHTML=(PARENT[tab]&&prof?`<button class='back' data-t='${PARENT[tab]}'>‹ ${PNAME[PARENT[tab]]}</button>`:``)+VIEWS[tab]();
+if(tab!==lastTab){app.classList.remove(`enter`);void app.offsetWidth;app.classList.add(`enter`);lastTab=tab}
+document.querySelectorAll(`details[data-an][open],div[data-an]`).forEach(anOpen);
+if($(`#ps-in`))paInit();
+if($(`#br`)){var r=$(`#br`);r.oninput=function(){setBpm(r.value)};$(`#mb`).onclick=toggleMet;if(tmr){$(`#mb`).textContent=`Stop`;$(`#mb`).setAttribute(`aria-pressed`,`true`)}}
+drawT()}
+function go(t){metStop();if(t===`setup`)su=null;if(t!==`done`&&tab===`done`)sess=null;tab=t;render();window.scrollTo(0,0)}
+document.addEventListener(`click`,function(e){var x,g=function(s){return x=e.target.closest(s)};
+if(g(`[data-a]`)){acc=parseInt(x.getAttribute(`data-a`),10);ss(`gp_acc`,acc);applyAcc();render();return}
+if(g(`[data-m]`)){mode=x.getAttribute(`data-m`);ss(`gp_mode`,mode);applyAcc();render();return}
+if(g(`[data-q]`)){if(Q.pick===null){Q.pick=parseInt(x.getAttribute(`data-q`),10);qn++;if(Q.o[Q.pick]===Q.ans)qc++}$(`#qz`).innerHTML=quizHTML();return}
+if(g(`[data-nq]`)){newQ();$(`#qz`).innerHTML=quizHTML();return}
+if(g(`[data-k]`)){nk=x.getAttribute(`data-k`);render();return}
+if(g(`[data-t]`)){go(x.getAttribute(`data-t`));return}
+if(g(`[data-h]`)){lefty=x.getAttribute(`data-h`)===`l`;ss(`gp_left`,lefty?`1`:`0`);render();return}
+if(g(`#bk-ex`)){var tx=bkData(),m=$(`#bk-msg`),fb2=function(){$(`#bk-in`).value=tx;$(`#bk-in`).select();m.textContent=`Copy the text in the box below.`};try{navigator.clipboard.writeText(tx).then(function(){m.textContent=`Copied. Paste it somewhere safe, like a note.`},fb2)}catch(er){fb2()}return}
+if(g(`#bk-im`)){var rr=bkImport($(`#bk-in`).value.trim()),m2=$(`#bk-msg`);if(m2)m2.textContent=rr;return}
+if(g(`[data-tn]`)){if(tuner.on)tunerStop();else tunerStart();return}
+if(g(`[data-ts]`)){var ti=parseInt(x.getAttribute(`data-ts`),10),b0=x;tuner.tgt=ti;document.querySelectorAll(`#tn-seg button`).forEach(function(b){b.setAttribute(`aria-pressed`,String(b===b0))});if(ti>=0&&!tuner.on)tnTone(ti);return}
+if(g(`[data-ap]`)){var aid=x.getAttribute(`data-ap`),ast=ANIM[aid];if(ast&&ast.t){anStop(aid);ast.paused=true}else{if(ast)ast.paused=false;anStart(aid)}return}
+if(g(`[data-min]`)){mins=+x.getAttribute(`data-min`);ss(`gp_min`,mins);render();return}
+if(g(`#go`)){startSess();return}
+if(g(`#sx-x`)){endSess();return}
+if(g(`#rt-b`)){tToggle();return}
+if(g(`[data-rate]`)){nextStep(+x.getAttribute(`data-rate`));return}
+if(g(`#nx`)){nextStep();return}
+if(g(`#oc-go`)){ocStart();return}
+if(g(`#oc-s`)){ocSave();return}
+if(g(`[data-goal]`)){prof.goal=SONGS[+x.getAttribute(`data-goal`)].n;saveProf();render();window.scrollTo(0,0);return}
+if(g(`[data-know]`)){var id=x.getAttribute(`data-know`);SK[id]={st:3,h:0,r:0,iv:0,due:dn()+3};saveSK();openSk=id;render();return}
+if(g(`[data-reset]`)){delete SK[x.getAttribute(`data-reset`)];saveSK();openSk=x.getAttribute(`data-reset`);render();return}
+if(g(`[data-sty]`)){var sy=x.getAttribute(`data-sty`),si=su.sty.indexOf(sy);if(si>-1)su.sty.splice(si,1);else su.sty.push(sy);x.setAttribute(`aria-pressed`,String(si<0));return}
+if(g(`[data-lv]`)){su.lv=+x.getAttribute(`data-lv`);document.querySelectorAll(`[data-lv]`).forEach(function(b){b.setAttribute(`aria-pressed`,String(+b.getAttribute(`data-lv`)===su.lv))});return}
+if(g(`#su-go`)){saveSetup();return}
+if(g(`[data-tool]`)){tool=x.getAttribute(`data-tool`);render();return}
+if(g(`#rc-b`)){recToggle();return}});
+document.addEventListener(`toggle`,function(e){var d=e.target,id;if(!d||d.tagName!==`DETAILS`)return;id=d.getAttribute(`data-an`);if(!id)return;if(d.open)anOpen(d);else anStop(id)},true);
 var lastDay=today();
-document.addEventListener("visibilitychange",function(){
-if(document.hidden){if(tuner.on)tunerStop();metStop();Object.keys(ANIM).forEach(anStop)}
-else if(today()!==lastDay){lastDay=today();dayI=new Date().getDay();chk=[];render()}});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")menu(false)});
+document.addEventListener(`visibilitychange`,function(){if(document.hidden){if(tuner.on)tunerStop();if(tab!==`sess`)metStop();Object.keys(ANIM).forEach(anStop)}else{if(sess&&sess.run)tick();if(today()!==lastDay){lastDay=today();if(tab===`home`)render()}}});
 render();
 var cref=null,cst=null;
-function cloudSave(){if(!cref)return;clearTimeout(cst);cst=setTimeout(function(){try{cref.set({week:week,lefty:lefty,mode:mode,acc:acc,days:days,chk:chk,chkd:today(),t:Date.now()}).catch(function(){})}catch(e){}},500)}
-(async function(){try{if(!window.claude||!claude.use)return;var us=await claude.use(`user`),db=await claude.use(`db`);if(!us||!db)return;var id=await us.id();if(!id)return;cref=db.collection(`data/users/${id}`).doc(`progress`);var s=await cref.get();if(!s.exists){cloudSave();return}var d=s.data()||{};if(d.week>=0&&d.week<W.length)week=d.week;if(typeof d.lefty===`boolean`)lefty=d.lefty;if(d.mode===`light`||d.mode===`dark`||d.mode===`system`)mode=d.mode;if(d.acc>=0&&d.acc<ACC.length)acc=d.acc;(d.days||[]).forEach(function(x){if(days.indexOf(x)<0)days.push(x)});if(d.chkd===today())chk=(d.chk||[]).filter(function(x){return typeof x===`string`});applyAcc();render();cloudSave()}catch(e){}})();
+function cloudSave(){if(!cref)return;clearTimeout(cst);cst=setTimeout(function(){try{cref.set({prof:prof,sk:SK,mins:mins,lefty:lefty,mode:mode,acc:acc,days:days,t:Date.now()}).catch(function(){})}catch(e){}},500)}
+(async function(){try{if(!window.claude||!claude.use)return;var us=await claude.use(`user`),db=await claude.use(`db`);if(!us||!db)return;var id=await us.id();if(!id)return;cref=db.collection(`data/users/${id}`).doc(`progress`);var s=await cref.get();if(!s.exists){cloudSave();return}var d=s.data()||{};mergeIn(d);if(d.mode===`light`||d.mode===`dark`||d.mode===`system`)mode=d.mode;if(d.acc>=0&&d.acc<ACC.length)acc=d.acc;applyAcc();render();cloudSave()}catch(e){}})();
 try{if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js")}catch(e){}
 </script>
 </body>
